@@ -14,7 +14,7 @@ import category12 from "../../assets/cat.webp";
 
 const Categories = () => {
   const categories = [
-    { name: 'Category 1', path: 'namea', image: category1 },
+    { name: 'Category 1', path: 'dress', image: category1 },
     { name: 'Category 2', path: 'nameb', image: category2 },
     { name: 'Category 3', path: 'namec', image: category3 },
     { name: 'Category 4', path: 'named', image: category4 },
@@ -32,22 +32,13 @@ const Categories = () => {
   return (
 <div className='categories__grid '>
 
-      {categories.map((category) => (
-        <Link key={category.name}
-          to={`/categories/${category.path}`}
-          
-          className='categories__card'
-        >
-          <img
-            src={category.image}
-            alt={category.name}
-          
-          />
-          <h4>
-            {category.name}
-          </h4>
-        </Link>
-      ))}
+{categories.map((category, index) => (
+  <Link key={index} to={`/categories/${category.path}`} className='categories__card'>
+    <img src={category.image} alt={category.name} />
+    <h4>{category.name}</h4>
+  </Link>
+))}
+
     </div>
   );
 };
