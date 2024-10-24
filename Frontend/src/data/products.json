@@ -1,108 +1,231 @@
-[
-  {
-    "id": 1,
-    "name": "Leather Handbag",
-    "category": "accessories",
-    "description": "Stylish leather handbag with ample storage space.",
-    "price": 79.99,
-    "oldPrice": 99.99,
-    "image": "https://images.unsplash.com/photo-1512201078372-9c6b2a0d528a?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "color": "black",
-    "rating": 4.5,
-    "author":"admin"
-  },
-  {
-    "id": 2,
-    "name": "Evening Gown",
-    "category": "dress",
-    "description": "Elegant evening gown for special occasions.",
-    "price": 149.99,
-    "oldPrice": 199.99,
-    "image": "https://images.unsplash.com/photo-1568251188392-ae32f898cb3b?q=80&w=2062&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "color": "red",
-    "rating": 4.0
-  },
-  {
-    "id": 3,
-    "name": "Gold Necklace",
-    "category": "jewellery",
-    "description": "Exquisite gold necklace with intricate design.",
-    "price": 199.99,
-    "image": "https://images.unsplash.com/photo-1631097969294-c38afba59496?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "color": "gold",
-    "rating": 4.7
-  },
-  {
-    "id": 4,
-    "name": "Matte Lipstick",
-    "category": "cosmetics",
-    "description": "Long-lasting matte lipstick in various shades.",
-    "price": 19.99,
-    "image": "https://images.unsplash.com/photo-1631214500115-598fc2cb8d2d?q=80&w=1925&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "color": "red",
-    "rating": 4.2
-  },
-  {
-    "id": 5,
-    "name": "Silk Scarf",
-    "category": "accessories",
-    "description": "Luxurious silk scarf with vibrant colors.",
-    "price": 29.99,
-    "oldPrice": 39.99,
-    "image": "https://images.unsplash.com/photo-1485527691629-8e370684924c?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "color": "blue",
-    "rating": 4.3
-  },
-  {
-    "id": 6,
-    "name": "Cocktail Dress",
-    "category": "dress",
-    "description": "Chic cocktail dress for parties and events.",
-    "price": 89.99,
-    "image": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "color": "black",
-    "rating": 4.4
-  },
-  {
-    "id": 7,
-    "name": "Diamond Earrings",
-    "category": "jewellery",
-    "description": "Sparkling diamond earrings that add elegance to any outfit.",
-    "price": 299.99,
-    "oldPrice": 349.99,
-    "image": "https://images.unsplash.com/photo-1587467442586-7bcc51828a10?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "color": "silver",
-    "rating": 4.8
-  },
-  {
-    "id": 8,
-    "name": "Foundation",
-    "category": "cosmetics",
-    "description": "High-coverage foundation for a flawless finish.",
-    "price": 39.99,
-    "image": "https://images.unsplash.com/photo-1599733589046-10c005739ef9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "color": "beige",
-    "rating": 4.1
-  },
-  {
-    "id": 9,
-    "name": "Sunglasses",
-    "category": "accessories",
-    "description": "Trendy sunglasses with UV protection.",
-    "price": 49.99,
-    "image": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "color": "black",
-    "rating": 4.6
-  },
-  {
-    "id": 10,
-    "name": "Casual Pants",
-    "category": "dress",
-    "description": "Comfortable maxi dress for casual outings.",
-    "price": 59.99,
-    "oldPrice": 79.99,
-    "image": "https://plus.unsplash.com/premium_photo-1664298355914-bc65d2c9af64?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "color": "green",
-    "rating": 4.2
-  }
-]
+ [
+    {
+      "id": 1,
+      "name": "Elegant Silver Earrings",
+      "metal":"gold",
+      "category": "Earrings",
+      "description": "A pair of elegant silver earrings perfect for any occasion.",
+      "price": 79.99,
+      "oldPrice": 99.99,
+      "image": "images/products/elegant-silver-earrings.jpg",
+      "color": "red",
+      "rating": 4.5,
+      "author": "admin",
+   
+      "weight":"55"
+    },
+    {
+      "id": 2,
+      "name": "Gold Toe Ring",
+      "category": "Toe Rings",
+      "description": "Stylish gold toe ring to adorn your feet.",
+      "price": 49.99,
+      "oldPrice": 59.99,
+      "image": "images/products/gold-toe-ring.jpg",
+      "color": "Gold",
+      "rating": 4.2,
+      "author": "admin",
+       "metal":"gold"
+    },
+    {
+      "id": 3,
+      "name": "Diamond Engagement Ring",
+      "category": "Rings",
+      "description": "A stunning diamond engagement ring to mark your special occasion.",
+      "price": 499.99,
+      "oldPrice": 599.99,
+      "image": "images/products/diamond-engagement-ring.jpg",
+      "color": "White Gold",
+      "rating": 4.9,
+      "author": "admin",
+      "size":"5 to 15"
+    },
+    {
+      "id": 4,
+      "name": "Silver Anklet with Charms",
+      "category": "Anklets",
+      "description": "Delicate silver anklet adorned with small charms.",
+      "price": 89.99,
+      "oldPrice": 99.99,
+      "image": "images/products/silver-anklet-charms.jpg",
+      "color": "Silver",
+      "rating": 4.6,
+      "author": "admin"
+    },
+    {
+      "id": 5,
+      "name": "Pearl Necklace",
+      "category": "Necklaces",
+      "description": "Classic pearl necklace that adds grace to your attire.",
+      "price": 149.99,
+      "oldPrice": 179.99,
+      "image": "images/products/pearl-necklace.jpg",
+      "color": "White",
+      "rating": 4.7,
+      "author": "admin"
+
+    },
+    {
+      "id": 6,
+      "name": "Bridal Jewellery Set",
+      "category": "Jewellery Sets",
+      "description": "Exquisite jewellery set for the bride-to-be.",
+      "price": 999.99,
+      "oldPrice": 1299.99,
+      "image": "images/products/bridal-jewellery-set.jpg",
+      "color": "Gold",
+      "rating": 5.0,
+      "author": "admin"
+    },
+    {
+      "id": 7,
+      "name": "Leather Bracelet for Men",
+      "category": "Bracelets",
+      "description": "Stylish leather bracelet perfect for casual wear.",
+      "price": 39.99,
+      "oldPrice": 49.99,
+      "size":8,
+      "image": "images/products/leather-bracelet-men.jpg",
+      "color": "Brown",
+      "rating": 4.3,
+      "metal":"red",
+      "author": "admin"
+    },
+    {
+      "id": 8,
+      "name": "Stainless Steel Watch",
+      "category": "Mens Jewellery",
+      "description": "Elegant stainless steel watch for men.",
+      "price": 199.99,
+      "oldPrice": 249.99,
+      "image": "images/products/stainless-steel-watch.jpg",
+      "color": "Silver",
+      "rating": 4.6,
+      "author": "admin"
+    },
+    {
+      "id": 9,
+      "name": "Heart Pendant Charm",
+      "category": "Charms & Pendants",
+      "description": "Delicate heart-shaped pendant charm.",
+      "price": 59.99,
+      "oldPrice": 69.99,
+      "image": "images/products/heart-pendant-charm.jpg",
+      "color": "Rose Gold",
+      "rating": 4.8,
+      "author": "admin"
+    },
+   
+    {
+      "id": 11,
+      "name": "Gold Bangles Set",
+      "category": "Bangles",
+      "description": "Set of traditional gold bangles.",
+      "price": 299.99,
+      "oldPrice": 349.99,
+      "image": "images/products/gold-bangles-set.jpg",
+      "color": "Gold",
+      "rating": 4.7,
+      "author": "admin"
+    },
+    {
+      "id": 12,
+      "name": "Silver Coin with Goddess Lakshmi",
+      "category": "Idols & Coins",
+      "description": "Pure silver coin engraved with the image of Goddess Lakshmi.",
+      "price": 109.99,
+      "oldPrice": 129.99,
+      "image": "images/products/silver-coin-lakshmi.jpg",
+      "color": "Silver",
+      "rating": 4.5,
+      "author": "admin"
+      
+    },
+    {
+      "id": 13,
+      "name": "Diamond Nose Pin",
+      "category": "Nose Pins",
+      "description": "Elegant diamond nose pin for a subtle sparkle.",
+      "price": 79.99,
+      "oldPrice": 99.99,
+      "image": "images/products/diamond-nose-pin.jpg",
+      "color": "White Gold",
+      "rating": 4.3,
+      "author": "admin"
+    },
+   
+    {
+      "id": 15,
+      "name": "Crystal Drop Earrings",
+      "category": "Earrings",
+      "description": "Sparkling crystal drop earrings for evening wear.",
+      "price": 69.99,
+      "oldPrice": 89.99,
+      "image": "images/products/crystal-drop-earrings.jpg",
+      "color": "Clear",
+      "rating": 4.6,
+      "author": "admin"
+    },
+    {
+      "id": 16,
+      "name": "Toe Ring Set",
+      "category": "Toe Rings",
+      "description": "Set of five silver toe rings with different designs.",
+      "price": 59.99,
+      "oldPrice": 69.99,
+      "image": "images/products/toe-ring-set.jpg",
+      "color": "Silver",
+      "rating": 4.4,
+      "author": "admin"
+    },
+    {
+      "id": 17,
+      "name": "Men's Cufflinks",
+      "category": "Mens Jewellery",
+      "description": "Classic cufflinks for formal occasions.",
+      "price": 89.99,
+      "oldPrice": 99.99,
+      "image": "images/products/mens-cufflinks.jpg",
+      "color": "Silver",
+      "rating": 4.5,
+      "author": "admin"
+    },
+    {
+      "id": 18,
+      "name": "Anklet with Bells",
+      "category": "Anklets",
+      "description": "Traditional anklet with tiny bells.",
+      "price": 49.99,
+      "oldPrice": 59.99,
+      "image": "images/products/anklet-with-bells.jpg",
+      "color": "Silver",
+      "rating": 4.7,
+      "author": "admin"
+    },
+    {
+      "id": 19,
+      "name": "Charm Bracelet",
+      "category": "Bracelets",
+      "description": "Silver bracelet with multiple charms.",
+      "price": 99.99,
+      "oldPrice": 119.99,
+      "image": "images/products/charm-bracelet.jpg",
+      "color": "Silver",
+      "rating": 4.6,
+      "author": "admin"
+    },
+    {
+      "id": 20,
+      "name": "Gemstone Pendant Necklace",
+      "category": "Necklaces",
+      "description": "Necklace with a beautiful gemstone pendant.",
+      "price": 129.99,
+      "oldPrice": 149.99,
+      "image": "images/products/gemstone-pendant-necklace.jpg",
+      "color": "Various",
+      "rating": 4.8,
+      "author": "admin",
+      "metal":"gold"
+    }
+  ]
+

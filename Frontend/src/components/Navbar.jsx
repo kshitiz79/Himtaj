@@ -1,18 +1,73 @@
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import CartModal from '../pages/shop/CartModal';
+import avatarImg from "../assets/avatar.png";
+import { logout } from '../redux/features/auth/authSlice';
+import { useLogoutUserMutation } from '../redux/features/auth/authApi';
 
 const Navbar = () => {
-  return (
-    <header className="fixed-nav-bar w-nav ">
-      <nav className=" mx-auto px-4 flex justify-between items-center bg-[#fcf9f0]">
+  // Provide a default empty array if products is undefined
+  const products = useSelector((state) => state.cart.products);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const handleCartToggle = () => {
+    setIsCartOpen(!isCartOpen);
+  };
 
-      
-      <div className="nav__logo relative" >
-          <Link to="/">Himtaj </Link>
+  
+  // Show user if logged in
+  const dispatch =  useDispatch()
+  const [logoutUser] = useLogoutUserMutation();
+  const { user } = useSelector((state) => state.auth);
+  console.log(user)
+  // const user = true;
+  const navigate = useNavigate()
+  const handleLogout = async () => {
+    try {
+      await logoutUser().unwrap();
+      dispatch(logout());
+      navigate("/")
+    } catch (err) {
+      console.error("Failed to logout:", err);
+    }
+  };
+
+  // Dropdown for user menu
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const handleDropDownToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  // Dropdown menu items
+
+
+  const adminDropdownMenus = [
+    { label: "Dashboard", path: "/dashboard/admin" },
+    { label: "Manage Items", path: "/dashboard/manage-products" },
+    {label: "All Orders", path: "/dashboard/manage-orders" },
+    { label: "Add New Post", path: "/dashboard/add-new-post" }
+  ];
+
+  const userDropdownMenus = [
+    { label: "Dashboard", path: "/dashboard" },
+    { label: "Profile", path: "/dashboard/profile" }, 
+    { label: "Payments", path: "/dashboard/payments" },
+    { label: "Orders", path: "/dashboard/orders" },
+  ];
+
+  const dropdownMenus = user?.role === 'admin'
+    ? [...adminDropdownMenus]
+    : [ ...userDropdownMenus];
+
+
+  return (
+    <header className="fixed-nav-bar w-nav">
+      <nav className="mx-auto px-4 flex justify-between items-center bg-[#fcf9f0]">
+        <div className="nav__logo relative">
+          <Link to="/">Himtaj</Link>
         </div>
 
-
         <ul className="nav__links flex-1 flex justify-center space-x-6">
-          
           <li className='link'>
             <Link to="/">Home</Link>
           </li>
@@ -20,38 +75,65 @@ const Navbar = () => {
             <Link to="/shop">Shop</Link>
           </li>
           <li className='link'>
-            <Link to="/">Pages</Link>
+            <Link to="/pages">Pages</Link> {/* Updated link to /pages */}
           </li>
           <li className='link'>
             <Link to="/contact">Contact</Link>
           </li>
         </ul> 
-        
-      
 
-        <div className="nav__icons relative" >
+        <div className="nav__icons relative">
           <span>
             <Link to="/search">
-            <i className="ri-search-line"></i>
+              <i className="ri-search-line"></i>
             </Link>
           </span>
-<span>
-  <button className='hover:text-primary'>
-  <i className="ri-shopping-bag-4-line"></i>
-  <sup className='text-sm inline-block px-1.5 text-white rounded-full bg-primary text-center'>0
-    
-  </sup>
-  </button>
-</span>
-<span>
-  <Link to="login">
-  <i className="ri-user-line"></i>
-  </Link>
-</span>
+          <span>
+            <button onClick={handleCartToggle}  className='hover:text-primary relative'>
+              <i className="ri-shopping-bag-4-line"></i>
+              <sup className='text-sm inline-block px-1.5 text-white rounded-full bg-primary text-center absolute -top-2 -right-2'>
+          {products.length}
+              </sup>
+            </button>
+          </span>
+
+
+          <span>
+            {user ? (
+              <>
+                <img
+                  onClick={handleDropDownToggle}
+                  src={user?.profileImage || avatarImg}
+                  alt="User Avatar"
+                  className='size-6 rounded-full cursor-pointer'
+                />
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-3 p-4 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                    <ul className="font-medium space-y-4 p-2">
+                      {dropdownMenus.map((menu, index) => (
+                        <li key={index}>
+                          <Link onClick={() => setIsDropdownOpen(false)} to={menu.path} className="dropdown-items">
+                            {menu.label}
+                          </Link>
+                        </li>
+
+                      ))}
+                      <li>
+                        <Link onClick={handleLogout} className='dropdown-items'>Logout</Link>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </>
+            ) : (
+              <Link to="/login"><i className="ri-user-line"></i></Link>
+            )}
+          </span>
         </div>
       </nav>
-    </header>
 
+      {isCartOpen && <CartModal products={products} isOpen={isCartOpen} onClose={handleCartToggle} />}
+    </header>
   );
 };
 
