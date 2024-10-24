@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import TextInput from '../addProduct/TextInput';
-import UploadImage from '../AddProduct/SelectInput';
-import SelectInput from '../AddProduct/UploadImage';
+import TextInput from './../AddProduct/TextInput';
+import UploadImage from './../AddProduct/SelectInput';
+import SelectInput from './../AddProduct/UploadImage';
 import { useFetchProductByIdQuery, useUpdateProductMutation } from '../../../../src/redux/features/products/productsApi';
 
 const categories = [

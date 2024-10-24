@@ -18,7 +18,7 @@ import ManageUser from "../dashboard/admin/Users/ManageUser";
 import AddProduct from "../dashboard/admin/AddProduct/AddProduct";
 import ManageProducts from "../dashboard/admin/ManageProduct/ManageProduct";
 import UpdateProduct from "../dashboard/admin/ManageProduct/UpdateProduct";
-import AdminDMain from "../dashboard/admin/Dashboard/AdminDmain";
+import AdminDMain from "../dashboard/admin/Dashboard/AdminDMain";
 
 
 
