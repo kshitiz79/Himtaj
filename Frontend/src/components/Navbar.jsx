@@ -5,46 +5,42 @@ import CartModal from '../pages/shop/CartModal';
 import avatarImg from "../assets/avatar.png";
 import { logout } from '../redux/features/auth/authSlice';
 import { useLogoutUserMutation } from '../redux/features/auth/authApi';
+import { useFetchCartQuery } from '../redux/features/cart/cartApi';
 
 const Navbar = () => {
-  // Provide a default empty array if products is undefined
-  const products = useSelector((state) => state.cart.products);
+  const { user } = useSelector((state) => state.auth); // First, get user data from Redux
+  const userId = user?._id; // Then, define userId based on user data
+
+  const { data: products = [], refetch } = useFetchCartQuery(userId); // Get the user ID if the user is logged in
+
   const [isCartOpen, setIsCartOpen] = useState(false);
   const handleCartToggle = () => {
     setIsCartOpen(!isCartOpen);
   };
 
-  
-  // Show user if logged in
-  const dispatch =  useDispatch()
+  const dispatch = useDispatch();
   const [logoutUser] = useLogoutUserMutation();
-  const { user } = useSelector((state) => state.auth);
-  console.log(user)
-  // const user = true;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const handleLogout = async () => {
     try {
       await logoutUser().unwrap();
       dispatch(logout());
-      navigate("/")
+      navigate("/");
     } catch (err) {
       console.error("Failed to logout:", err);
     }
   };
 
-  // Dropdown for user menu
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const handleDropDownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // Dropdown menu items
-
-
   const adminDropdownMenus = [
     { label: "Dashboard", path: "/dashboard/admin" },
     { label: "Manage Items", path: "/dashboard/manage-products" },
-    {label: "All Orders", path: "/dashboard/manage-orders" },
+    { label: "All Orders", path: "/dashboard/manage-orders" },
     { label: "Add New Post", path: "/dashboard/add-new-post" }
   ];
 
@@ -55,14 +51,11 @@ const Navbar = () => {
     { label: "Orders", path: "/dashboard/orders" },
   ];
 
-  const dropdownMenus = user?.role === 'admin'
-    ? [...adminDropdownMenus]
-    : [ ...userDropdownMenus];
-
+  const dropdownMenus = user?.role === 'admin' ? adminDropdownMenus : userDropdownMenus;
 
   return (
     <header className="fixed-nav-bar w-nav">
-      <nav className="mx-auto px-4 flex justify-between items-center bg-[#fcf9f0]">
+      <nav className="mx-auto px-4 flex justify-between items-center bg-[#d8f4f2]">
         <div className="nav__logo relative">
           <Link to="/">Himtaj</Link>
         </div>
@@ -75,10 +68,10 @@ const Navbar = () => {
             <Link to="/shop">Shop</Link>
           </li>
           <li className='link'>
-            <Link to="/pages">Pages</Link> {/* Updated link to /pages */}
+            <Link to="/gifts">Gifting</Link>
           </li>
           <li className='link'>
-            <Link to="/contact">Contact</Link>
+            <Link to="/contact-us">Contact</Link>
           </li>
         </ul> 
 
@@ -89,14 +82,13 @@ const Navbar = () => {
             </Link>
           </span>
           <span>
-            <button onClick={handleCartToggle}  className='hover:text-primary relative'>
+            <button onClick={handleCartToggle} className='hover:text-primary relative'>
               <i className="ri-shopping-bag-4-line"></i>
               <sup className='text-sm inline-block px-1.5 text-white rounded-full bg-primary text-center absolute -top-2 -right-2'>
-          {products.length}
+                {products.length}
               </sup>
             </button>
           </span>
-
 
           <span>
             {user ? (
@@ -116,7 +108,6 @@ const Navbar = () => {
                             {menu.label}
                           </Link>
                         </li>
-
                       ))}
                       <li>
                         <Link onClick={handleLogout} className='dropdown-items'>Logout</Link>
@@ -132,7 +123,15 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {isCartOpen && <CartModal products={products} isOpen={isCartOpen} onClose={handleCartToggle} />}
+      {/* Pass `userId` as a prop to CartModal */}
+      {isCartOpen && (
+        <CartModal 
+          products={products} 
+          isOpen={isCartOpen} 
+          onClose={handleCartToggle} 
+          userId={userId} 
+        />
+      )}
     </header>
   );
 };

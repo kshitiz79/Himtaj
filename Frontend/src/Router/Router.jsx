@@ -9,7 +9,7 @@ import Login from "../components/Login";
 import Register from "../components/Register";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import PrivateRoute from "./PrivateRoute";
-import UserDMain from "../dashboard/user/dashboard/userDMain";
+import UserDMain from "../dashboard/user/dashboard/UserDMain";
 import OrderDetails from "../dashboard/user/OrderDetail";
 
 import UserReviews from "../dashboard/user/UserReviews";
@@ -19,6 +19,10 @@ import AddProduct from "../dashboard/admin/AddProduct/AddProduct";
 import ManageProducts from "../dashboard/admin/ManageProduct/ManageProduct";
 import UpdateProduct from "../dashboard/admin/ManageProduct/UpdateProduct";
 import AdminDMain from "../dashboard/admin/Dashboard/AdminDMain";
+import { Contact } from "../pages/ContactUs/Contact";
+import Deals from "../dashboard/admin/Deals_&_Banners/Deals";
+import Gifts from "../pages/Gifts/Gifts";
+
 
 
 
@@ -49,7 +53,16 @@ const router = createBrowserRouter([
       {
         path:"/shop/:id" , element:<SingleProduct/>
       },
+      {
+       path:"/shop/category/:categoryName", element:<CategoryPage />
+      },
 
+      {
+        path:"/contact-us", element:<Contact />
+       },
+       {
+        path:"/gifts", element:<Gifts />
+       },
       {
         path:"/dashboard",
         element:<DashboardLayout/>,
@@ -74,6 +87,9 @@ const router = createBrowserRouter([
           { path: 'users', element: <PrivateRoute><ManageUser/></PrivateRoute>},
 
           { path: 'manage-orders', element: <PrivateRoute>Admin Main</PrivateRoute>},
+
+          
+          { path: 'deals-banners', element: <PrivateRoute><Deals/></PrivateRoute>},
         ]
       }
     ] 

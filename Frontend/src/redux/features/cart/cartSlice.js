@@ -1,98 +1,47 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-    products: [],
-    selectedItems: 0,
-  totalPrice: 0,
-  tax: 0,
-  taxRate: 0.05,
-  grandTotal: 0,
+const loadCartFromLocalStorage = () => {
+  try {
+    const serializedState = localStorage.getItem("cart");
+    return serializedState ? JSON.parse(serializedState) : { products: [] };
+  } catch (e) {
+    return { products: [] };
+  }
 };
 
-
+const initialState = loadCartFromLocalStorage();
 
 const cartSlice = createSlice({
-    name: 'cart',
-    initialState,
-    reducers: {
-        addToCart: (state, action) => {
+  name: "cart",
+  initialState,
+  reducers: {
+    addToCart(state, action) {
+      const existingItem = state.products.find((item) => item._id === action.payload._id);
+      if (existingItem) {
+        existingItem.quantity += action.payload.quantity || 1;
+      } else {
+        state.products.push({ ...action.payload, quantity: 1 });
+      }
+    
+      // Save only plain data to localStorage, not the Proxy state
+      const plainState = { products: state.products.map(item => ({ ...item })) };
+      localStorage.setItem("cart", JSON.stringify(plainState));
+    },
+    
 
-            const isExist = state.products.find((product) => product.id === action.payload.id);
-
-            if (!isExist) {
-                state.products.push({ ...action.payload, quantity: 1 });
-              }
-              else{
-                console.log("Item already added")
-              }
-
-              state.selectedItems = setSelectedItems(state);
-              state.totalPrice = setTotalPrice(state);
-              state.tax = setTax(state);
-              state.grandTotal = setGrandTotal(state);
-        },
-        // ... other reducers like removeFromCart, updateQuantity, etc.
-        updateQuantity: (state, action) => {
-          const products = state.products.map((product) => {
-            if (product.id === action.payload.id) {
-              if (action.payload.type === "increment") {
-                product.quantity += 1;
-              } else if (action.payload.type === "decrement") {
-                if (product.quantity > 1) {
-                  product.quantity -= 1;
-                }
-              }
-            }
-            return product;
-          });
-          state.selectedItems = setSelectedItems(state);
-          state.totalPrice = setTotalPrice(state);
-          state.tax = setTax(state);
-          state.grandTotal = setGrandTotal(state);
-        },
-
-        removeFromCart: (state, action) => {
-          state.products = state.products.filter(
-            (product) => product.id !== action.payload.id
-          );
-          state.selectedItems = setSelectedItems(state);
-          state.totalPrice = setTotalPrice(state);
-          state.tax = setTax(state);
-          state.grandTotal = setGrandTotal(state);
-        },
-        clearCart: (state) => {
-          state.products = [];
-          state.selectedItems = 0;
-          state.totalPrice = 0;
-          state.tax = 0;
-          state.grandTotal = 0;
-        },
-
-
-    }
+    removeFromCart(state, action) {
+      state.products = state.products.filter((item) => item._id !== action.payload._id);
+      localStorage.setItem("cart", JSON.stringify(state));
+    },
+    clearCart(state) {
+      state.products = [];
+      localStorage.removeItem("cart");
+    },
+  },
 });
 
-export const setSelectedItems = (state) =>
-    state.products.reduce((total, product) => {
-      return Number(total + product.quantity);
-    }, 0);
-
-    export const setTotalPrice = (state) =>
-        state.products.reduce((total, product) => {
-          return Number(total + product.quantity * product.price);
-        }, 0);
-      
-        export const setTax = (state) => setTotalPrice(state) * state.taxRate;
-
-        export const setGrandTotal = (state) => {
-            return setTotalPrice(state) + setTotalPrice(state) * state.taxRate;
-          };
-
-
-          export const { addToCart, updateQuantity, removeFromCart, clearCart } = cartSlice.actions;
-        
-        export default cartSlice.reducer;
-
+export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
+export default cartSlice.reducer;
 
 
 

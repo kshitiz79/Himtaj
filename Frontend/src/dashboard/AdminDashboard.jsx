@@ -75,6 +75,16 @@ const AdminDashboard= () => {
               Manage Orders
             </NavLink>
           </li>
+          <li className="mb-3">
+            <NavLink
+              to="/dashboard/deals-banners"
+              className={({ isActive }) =>
+                isActive ? "text-blue-600 font-bold" : "text-black"
+              }
+            >
+          Deals & Banners
+            </NavLink>
+          </li>
         </ul>
       </div>
 

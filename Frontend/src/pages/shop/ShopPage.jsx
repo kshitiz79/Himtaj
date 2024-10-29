@@ -7,17 +7,17 @@ import { useFetchAllProductsQuery } from '../../redux/features/products/products
 
 const filters = {
   categories: [
-    "All", "Earrings", "Rings", "Anklets", "Necklaces", "Jewellery Sets", "Bracelets", 
-    "Men's Jewellery", "Charms & Pendants", "Idols & Coins", "Bangles", "Nose Pins"
+    "All", "Earrings", "Necklaces", "Studs", "Bracelets", "Rings", "Anklets", 
+    "Idols & Coins", "Men's Jewellery", "Kid\'s Jewellery", "Bridal Jewellery", "Fashion Jewellery","Gold Jewellery"
   ],
-  colors: ["All", "Silver", "White", "White Gold"],
-  sizes: ["7", "8", "9", "10", "11", "12"], 
+  colors: ["All", "Silver", "Gold", "Rose Gold"],
+
   priceRanges: [
     { label: "All", min: 0, max: Infinity }, // Added "All" option
-    { label: "Under RS50", min: 0, max: 50 },
-    { label: "Under RS100", min: 50, max: 100 },
-    { label: "Under RS200", min: 100, max: 200 },
-    { label: "Over RS200", min: 200, max: Infinity },
+    { label: "Under RS 1500", min: 0, max: 1500 },
+    { label: "Under RS 3000", min: 1500, max: 3000 },
+    { label: "Under RS 5000", min: 3000 , max: 5000 },
+    { label: "Over RS 5000", min: 5000, max: Infinity },
   ],
 
 };

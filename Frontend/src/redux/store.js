@@ -6,6 +6,9 @@ import productsApi from "./features/products/productsApi";
 import reviewApi from "./features/reviews/reviewApi";
 import statsApi from "./features/stats/statsApi";
 import orderApi from "./features/order/orderApi";
+import cartApi from "./features/cart/cartApi"; // Ensure it matches the exact file name
+
+import dealsApi from "./features/deals/dealsApi";
 
 export const store = configureStore({
   reducer: {
@@ -16,16 +19,21 @@ export const store = configureStore({
     [reviewApi.reducerPath]: reviewApi.reducer,
     [statsApi.reducerPath]: statsApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
+    [cartApi.reducerPath]: cartApi.reducer, 
+    [dealsApi.reducerPath]: dealsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       authApi.middleware,
       productsApi.middleware,
-      reviewApi.middleware, // Add reviewApi middleware
+      reviewApi.middleware, 
       statsApi.middleware,
-      orderApi.middleware // Add statsApi middleware
+      orderApi.middleware,
+      cartApi.middleware ,
+      dealsApi.middleware // Add cartApi middleware
     ),
 });
+
 
 // The store.js file is responsible for configuring 
 // the global Redux store in your application. It 

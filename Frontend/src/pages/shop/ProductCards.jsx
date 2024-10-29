@@ -1,45 +1,69 @@
 import { Link } from "react-router-dom";
 import RatingStar from "../../components/RatingStar";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../redux/features/cart/cartSlice";
+import { useAddItemToCartMutation } from "../../redux/features/cart/cartApi";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 
 const ProductCards = ({ products }) => {
-  const dispatch = useDispatch();
+  const [addItemToCart, { isLoading, isSuccess }] = useAddItemToCartMutation();
+  const userId = useSelector((state) => state.auth.user?._id); // Get user ID from Redux
+  const [addedProductId, setAddedProductId] = useState(null);
 
-  const handleAddToCart = (product) => {
-      dispatch(addToCart(product))
-  }
+  const handleAddToCart = async (product) => {
+    if (!userId) {
+      console.error("User is not logged in.");
+      return;
+    }
+
+    await addItemToCart({
+      productId: product._id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      userId: userId,
+    });
+
+    setAddedProductId(product._id); // Temporarily mark product as added for feedback
+    setTimeout(() => setAddedProductId(null), 1500); // Clear feedback after 1.5s
+  };
+
   return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {products.map((product, index) => (
-              <div key={index} className="product__card">
-                  <div className='relative'>
-                      <Link to={`/shop/${product._id}`}>
-                          <img
-                              src={product.image}
-                              alt={product.name}
-                              className='max-h-96 md:h-64 w-full object-cover hover:scale-105 transition-all duration-300'
-                          />
-                      </Link>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      {products.map((product) => (
+        <div key={product._id} className="product__card">
+          <div className="relative">
+            <Link to={`/shop/${product._id}`}>
+              <img
+                src={product.image}
+                alt={product.name}
+                className="max-h-96 md:h-64 w-full object-cover"
+              />
+            </Link>
 
-                      <div className='hover:block absolute top-3 right-3'>
-                          <button
-                              onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleAddToCart(product)
-                              }}
-                          >
-                              < i className="ri-shopping-cart-2-line bg-primary p-1.5 text-white hover:bg-primary-dark "></i>
-                          </button>
-
-                      </div>
-                  </div>
-                  <div className="product__card__content">
-                      <h4>{product.name}</h4>
-                      <p>${product.price} {product.oldPrice ? <s>${product.oldPrice}</s> : null}</p>
-                   
-              <RatingStar rating={product.rating}/>
-            
+            <button
+              onClick={() => handleAddToCart(product)}
+              disabled={isLoading}
+              className={`absolute top-3 right-3 flex items-center justify-center ${
+                addedProductId === product._id
+                  ? "bg-green-500"
+                  : "bg-primary hover:bg-primary-dark"
+              } p-1.5 text-white rounded transition duration-300`}
+            >
+              {isLoading && addedProductId === product._id ? (
+                <i className="ri-loader-line animate-spin"></i> // Loading spinner
+              ) : addedProductId === product._id ? (
+                <span className="ri-check-line"></span> // Success icon
+              ) : (
+                <i className="ri-shopping-cart-2-line"></i> // Default cart icon
+              )}
+            </button>
+          </div>
+          <div className="product__card__content">
+            <h4>{product.name}</h4>
+            <p>
+              Rs {product.price} {product.oldPrice && <s>${product.oldPrice}</s>}
+            </p>
+            <RatingStar rating={product.rating} />
           </div>
         </div>
       ))}
@@ -48,4 +72,3 @@ const ProductCards = ({ products }) => {
 };
 
 export default ProductCards;
-

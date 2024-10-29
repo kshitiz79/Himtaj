@@ -25,6 +25,10 @@ router.post("/create-product", async (req, res) => { // Define a route for creat
         (acc, review) => acc + review.rating,
         0
       );
+
+
+
+      
       const averageRating = totalRating / reviews.length; // Calculate the average rating
       savedProduct.rating = averageRating; // Assign the average rating to the product's rating
       await savedProduct.save(); // Save the updated product with the new rating
@@ -41,48 +45,72 @@ router.post("/create-product", async (req, res) => { // Define a route for creat
 
 
 
-// Get all posts (public route)
-router.get("/", async (req, res) => { // Define a route to get all products
+
+
+
+router.get("/", async (req, res) => { // Mark the route as async
   try {
-    const { category, color, minPrice, maxPrice, page = 1, limit = 10 } = req.query; // Extract filter and pagination options from query parameters
+    const { category, color, minPrice, maxPrice, page = 1, limit = 10 } = req.query;
 
-    const filter = {}; // Initialize an empty filter object
+    const filter = {};
 
-    if (category && category !== "all") { // If a category is specified, add it to the filter
+    // Apply filters based on query parameters
+    if (category && category !== "all") {
       filter.category = category;
     }
 
-    if (color && color !== "all") { // If a color is specified, add it to the filter
+    if (color && color !== "all") {
       filter.color = color;
     }
 
-    if (minPrice && maxPrice) { // If both minimum and maximum price are specified, add them to the filter
-      const min = parseFloat(minPrice); // Convert minPrice to a number
-      const max = parseFloat(maxPrice); // Convert maxPrice to a number
-      if (!isNaN(min) && !isNaN(max)) { // Ensure the prices are valid numbers
-        filter.price = { $gte: min, $lte: max }; // Set the price filter for the query
+    if (minPrice && maxPrice) {
+      const min = parseFloat(minPrice);
+      const max = parseFloat(maxPrice);
+      if (!isNaN(min) && !isNaN(max)) {
+        filter.price = { $gte: min, $lte: max };
       }
     }
 
+    // Pagination setup
+    const pageNumber = parseInt(page, 10);
+    const itemsPerPage = parseInt(limit, 10);
+    const skip = (pageNumber - 1) * itemsPerPage;
 
+    // Fetch products and total count using await in async function
+    const products = await Products.find(filter).skip(skip).limit(itemsPerPage).exec();
+    const totalProducts = await Products.countDocuments(filter);
 
+    // Calculate total pages
+    const totalPages = Math.ceil(totalProducts / itemsPerPage);
 
-    const skip = (parseInt(page) - 1) * parseInt(limit); // Calculate how many products to skip for pagination
-    const totalProducts = await Products.countDocuments(filter); // Get the total number of products that match the filter
-    const totalPages = Math.ceil(totalProducts / parseInt(limit)); // Calculate the total number of pages
-
-    const products = await Products.find(filter) // Find products matching the filter
-      .skip(skip) // Skip the appropriate number of products for pagination
-      .limit(parseInt(limit)) // Limit the number of products returned
-      .populate("author", "email") // Populate the 'author' field with the author's email
-      .sort({ createdAt: -1 }); // Sort the products by creation date, most recent first
-
-    res.status(200).send({ products, totalPages, totalProducts }); // Return the products, total pages, and total product count
+    // Return products, total count, and pagination info
+    res.status(200).json({
+      products,
+      totalProducts,
+      totalPages,
+      currentPage: pageNumber,
+    });
   } catch (error) {
-    console.error("Error fetching products:", error); // Log the error in case of failure
-    res.status(500).send({ message: "Failed to fetch products" }); // Return a failure response
+    console.error("Error fetching products:", error);
+    res.status(500).json({ message: "Error fetching products" });
   }
 });
+
+
+
+
+router.get("/trending", async (req, res) => {
+  try {
+    const trendingProducts = await Products.find({ isTrending: true });
+    res.status(200).json(trendingProducts);
+  } catch (error) {
+    console.error("Error fetching trending products:", error);
+    res.status(500).json({ message: "Error fetching trending products" });
+  }
+});
+
+
+
 
 // Get single post (public route)
 router.get("/:id", async (req, res) => { // Define a route to get a single product by its ID

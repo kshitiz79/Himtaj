@@ -10,19 +10,19 @@ export const productsApi = createApi({
   tagTypes: ["Products"],
   endpoints: (builder) => ({
     fetchAllProducts: builder.query({
-        query: ({ category, color, minPrice, maxPrice, page = 1, limit = 10 }) => {
-            const queryParams = new URLSearchParams({
-                category: category || '',
-                color: color || '',
-                minPrice: minPrice || 0,
-                maxPrice: maxPrice || '',
-                page: page.toString(), 
-                limit: limit.toString()
-            }).toString();
-    
-            return `/?${queryParams}`;
-        },
-        providesTags: ["Products"],
+      query: ({ category, color, minPrice, maxPrice, page = 1, limit = 10 }) => {
+        const queryParams = new URLSearchParams({
+          ...(category && { category }),
+          ...(color && { color }),
+          ...(minPrice && { minPrice: minPrice.toString() }),
+          ...(maxPrice && { maxPrice: maxPrice.toString() }),
+          page: page.toString(),
+          limit: limit.toString(),
+        }).toString();
+
+        return `/?${queryParams}`;
+      },
+      providesTags: ["Products"],
     }),
 
     fetchProductById: builder.query({
@@ -30,26 +30,33 @@ export const productsApi = createApi({
       providesTags: (result, error, id) => [{ type: "Product", id }],
     }),
 
-    AddProduct: builder.mutation({
-        query: (newProduct) => ({
-          url: "/create-product",
-          method: "POST",
-          body: newProduct,
-          credentials: "include",
-        }),
-        invalidatesTags: ["Products"],
+    fetchTrendingProducts: builder.query({
+      query: () => `/trending`, // Endpoint for trending products
+      providesTags: ["Products"],
+    }),
+
+    addProduct: builder.mutation({
+      query: (newProduct) => ({
+        url: "/create-product",
+        method: "POST",
+        body: newProduct,
       }),
+      invalidatesTags: ["Products"],
+    }),
 
     fetchRelatedBlogs: builder.query({
       query: (id) => `blogs/related/${id}`,
     }),
 
+
+
+
+    
     updateProduct: builder.mutation({
       query: ({ id, ...rest }) => ({
         url: `update-product/${id}`,
         method: "PATCH",
         body: rest,
-        credentials: "include",
       }),
       invalidatesTags: ["Products"],
     }),
@@ -58,7 +65,6 @@ export const productsApi = createApi({
       query: (id) => ({
         url: `/${id}`,
         method: "DELETE",
-        credentials: "include",
       }),
       invalidatesTags: (result, error, id) => [{ type: "Products", id }],
     }),
@@ -68,6 +74,7 @@ export const productsApi = createApi({
 export const {
   useFetchAllProductsQuery,
   useFetchProductByIdQuery,
+  useFetchTrendingProductsQuery, // Export trending products query
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,

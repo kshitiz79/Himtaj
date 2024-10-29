@@ -12,9 +12,9 @@ export default {
         'custom-900': '900px', 
       },
       colors: {
-        'primary': '#d4af37', // Gold
-'primary-dark': '#b8860b', // Dark Goldenrod
-'primary-light': '#f9e6a6', // Light Golden
+        'primary': '#78a8a6', // Gold
+'primary-dark': '#4d6c6a', // Dark Goldenrod
+'primary-light': '#9bccca', // Light Golden
 'text-dark': '#0f172a', // Dark text color remains the same
 'text-light': '#64748b', // Light text color remains the same
 'extra-light': '#faf3dd', // Very light gold tone

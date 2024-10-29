@@ -35,13 +35,16 @@ const authRoutes = require('./src/users/user.route');
 const productRoutes = require('./src/products/products.route');
 const reviewRoutes = require('./src/reviews/reviews.route');
 const statsRoutes = require('./src/stats/stats.route');
+const cartRoutes = require('./src/cart/cart.route');
+const dealRoutes = require('./src/deals/deals.route');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/stats', statsRoutes);
 
-
+app.use('/api/cart', cartRoutes);
+app.use('/api/deal', dealRoutes);
 
 
 

@@ -1,35 +1,41 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import products from './../../data/products.json';
 import ProductCards from '../shop/ProductCards';
+import { useFetchAllProductsQuery } from '../../redux/features/products/productsApi';
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
-  const [filteredProducts, setFilteredProducts] = useState([]);
+
+  // Use the fetchAllProducts query, passing the category name
+  const { data, error, isLoading } = useFetchAllProductsQuery({
+    category: categoryName !== 'all' ? categoryName : '', // Filter by category, or get all if 'all'
+  });
 
   useEffect(() => {
-    // Ensure categoryName is a string before calling toLowerCase()
-    const filtered = products.filter((product) =>
-      product.category.toLowerCase() === (categoryName || '').toLowerCase()
-    );
-    setFilteredProducts(filtered);
-    console.log('Filtered Products:', filtered); // Log the filtered products
-  }, [categoryName])
-  useEffect(() => {
     window.scrollTo(0, 0);
-  }, []); // Added empty dependency array to run this effect only once
+  }, []); // Scroll to the top when the page loads
 
   return (
     <>
       <section className="section__container bg-primary-light">
         <h2 className="section__header capitalize">{categoryName}</h2>
         <p className="section__subheader">
-          lo b b hhhhh nnnnn nnnnnn hhhhhh loras,
+          {data?.products?.length > 0
+            ? `Browse our selection of ${categoryName} products.`
+            : `No products available for ${categoryName}.`}
         </p>
       </section>
 
       <div className="section__container">
-        <ProductCards products={filteredProducts} />
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>Error loading products.</p>
+        ) : data?.products?.length > 0 ? (
+          <ProductCards products={data.products} />
+        ) : (
+          <p>No products found in this category.</p>
+        )}
       </div>
     </>
   );

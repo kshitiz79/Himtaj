@@ -1,28 +1,38 @@
 import React, { useState } from 'react';
-import {useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useAddProductMutation } from '../../../../src/redux/features/products/productsApi';
 import TextInput from './TextInput';
 import SelectInput from './SelectInput';
 import UploadImage from './UploadImage';
 import { useNavigate } from 'react-router-dom';
+
 const categories = [
     { label: 'Select Category', value: '' },
-    { label: 'Accessories', value: 'accessories' },
-    { label: 'Dress', value: 'dress' },
-    { label: 'Jewellery', value: 'jewellery' },
-    { label: 'Cosmetics', value: 'cosmetics' }
+    { label: 'Earrings', value: 'Earrings' },
+    { label: 'Necklaces', value: 'Necklaces' },
+    { label: 'Studs', value: 'Studs' },
+    { label: 'Bracelets', value: 'Bracelets' },
+    { label: 'Rings', value: 'Rings' },
+    { label: 'Anklets', value: 'Anklets' },
+    { label: 'Idols & Coins', value: 'Idols & Coins' },
+    { label: "Men's Jewellery", value: "Men's Jewellery" },
+    { label: 'Kid\'s Jewellery', value: 'Kid\'s Jewellery' },
+    { label: 'Bridal Jewellery', value: 'Bridal Jewellery' },
+    { label: 'Fashion Jewellery', value: 'Fashion Jewellery' },
+    { label: 'Gold Jewellery', value: 'Gold Jewellery' }
 ];
 
 const colors = [
     { label: 'Select Color', value: '' },
-    { label: 'Black', value: 'black' },
-    { label: 'Red', value: 'red' },
-    { label: 'Gold', value: 'gold' },
-    { label: 'Blue', value: 'blue' },
-    { label: 'Silver', value: 'silver' },
-    { label: 'Beige', value: 'beige' },
-    { label: 'Green', value: 'green' }
+    { label: 'Silver', value: 'Silver' },
+    { label: 'Rose Gold', value: 'Rose Gold' },
+    { label: 'Gold', value: 'Gold' }
 ];
+
+const sizes = Array.from({ length: 11 }, (_, i) => i + 5).map(size => ({
+    label: size.toString(),
+    value: size.toString()
+}));
 
 const AddProduct = () => {
     const { user } = useSelector((state) => state.auth);
@@ -32,42 +42,42 @@ const AddProduct = () => {
         category: '',
         color: '',
         price: '',
-        description: ''
+        description: '',
+        isTrending: false,
+        size: '' // Optional field for size
     });
     const [image, setImage] = useState('');
 
     const [addProduct, { isLoading, error }] = useAddProductMutation();
-    const navigate = useNavigate()
-  
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
         setProduct({
             ...product,
-            [name]: value
+            [name]: type === 'checkbox' ? checked : value // Handle checkbox value
         });
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        if (!product.name || !product.category || !product.price  || !product.color || !product.description) {
-            alert('Please fill in all fields.');
+        if (!product.name || !product.category || !product.price || !product.color || !product.description) {
+            alert('Please fill in all required fields.');
             return;
         }
+        
         try {
             await addProduct({ ...product, image, author: user?._id }).unwrap();
             alert('Product added successfully!');
-            setProduct({ name: '', category: '', color: '', price: '', description: '' });
+            setProduct({ name: '', category: '', color: '', price: '', description: '', isTrending: false, size: '' });
             setImage('');
-            navigate("/shop")
+            navigate("/shop");
         } catch (err) {
             console.error('Failed to add product:', err);
         }
     };
 
-    // console.log("This is the image:", image)
     return (
         <div className="container mx-auto mt-8">
             <h2 className="text-2xl font-bold mb-6">Add New Product</h2>
@@ -93,6 +103,13 @@ const AddProduct = () => {
                     onChange={handleChange}
                     options={colors}
                 />
+                <SelectInput
+                    label="Size" // Add Size Select Input
+                    name="size"
+                    value={product.size}
+                    onChange={handleChange}
+                    options={[{ label: 'Select Size', value: '' }, ...sizes]}
+                />
                 <TextInput
                     label="Price"
                     name="price"
@@ -101,20 +118,12 @@ const AddProduct = () => {
                     value={product.price}
                     onChange={handleChange}
                 />
-                {/* <TextInput
-                    label="Image URL"
-                    name="image"
-                    type='text'
-                    value={product.image}
-                    onChange={handleChange}
-                     placeholder="Ex: https://unsplash.com/photos/a-group-of-women-in-brightly-colored-outfits.png"
-                /> */}
+               
                 <UploadImage
-                name="image"
-                id="image"
-                value={e => setImage(e.target.value)}
-                placeholder='Write a product description'
-                setImage={setImage}
+                    name="image"
+                    id="image"
+                    value={image}
+                    setImage={setImage}
                 />
 
                 <div>
@@ -126,10 +135,24 @@ const AddProduct = () => {
                         name="description"
                         id="description"
                         value={product.description}
-                        placeholder='Write a product description'
+                        placeholder="Write a product description"
                         onChange={handleChange}
-                        className="add-product-InputCSS "
+                        className="add-product-InputCSS"
                     />
+                </div>
+
+                <div className="flex items-center">
+                    <input
+                        type="checkbox"
+                        name="isTrending"
+                        id="isTrending"
+                        checked={product.isTrending}
+                        onChange={handleChange}
+                        className="mr-2"
+                    />
+                    <label htmlFor="isTrending" className="text-sm font-medium text-gray-700">
+                        Mark as Trending Product
+                    </label>
                 </div>
 
                 <div>
