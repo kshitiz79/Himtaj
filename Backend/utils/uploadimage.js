@@ -1,13 +1,9 @@
 const cloudinary = require("cloudinary").v2;
 
-const cloud_name = process.env.CLOUDINARY_CLOUD_NAME;
-const api_key = process.env.CLOUDINARY_API_KEY;
-const api_secret = process.env.CLOUDINARY_API_SECRET;
-
 cloudinary.config({
-  cloud_name: cloud_name,
-  api_key: api_key,
-  api_secret: api_secret,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 const opts = {
@@ -16,17 +12,15 @@ const opts = {
   resource_type: "auto",
 };
 
-
-module.exports = (image) => {
-  //imgage = > base64
+module.exports = (file) => {
+  // file = base64 encoded image or video string
   return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload(image, opts, (error, result) => {
+    cloudinary.uploader.upload(file, opts, (error, result) => {
       if (result && result.secure_url) {
-        // console.log(result.secure_url);
         return resolve(result.secure_url);
       }
-      console.log(error.message);
-      return reject({ message: error.message });
+      console.error("Cloudinary Upload Error:", error.message);
+      return reject(new Error(error.message));
     });
   });
 };

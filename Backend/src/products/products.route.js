@@ -1,4 +1,3 @@
-
 const express = require("express"); // Importing the express framework for creating the API
 const Products = require("./products.model"); // Importing the Products model from products.model.js
 const Reviews = require("../reviews/reviews.model"); // Importing the Reviews model from reviews.model.js
@@ -6,7 +5,12 @@ const verifyToken = require("../middleware/verifyToken");
 const verifyAdmin = require("../middleware/verifyAdmin");
 const router = express.Router(); // Creating a new router object to handle routes
 
-// post a product
+
+
+
+
+
+
 router.post("/create-product", async (req, res) => { // Define a route for creating a new product
   try {
     const { name } = req.body; // Destructuring the 'name' from the request body (may be unused later)
@@ -48,13 +52,39 @@ router.post("/create-product", async (req, res) => { // Define a route for creat
 
 
 
-router.get("/", async (req, res) => { // Mark the route as async
+
+
+
+
+
+router.get("/search", async (req, res) => {
+  const { query } = req.query;
+
+  try {
+    const regex = new RegExp(query, "i"); // Case-insensitive search
+    const products = await Products.find({
+      $or: [
+        { name: { $regex: regex } },
+        { description: { $regex: regex } },
+      ],
+    });
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ message: "Error searching products" });
+  }
+});
+
+
+
+
+router.get("/", async (req, res) => {
   try {
     const { category, color, minPrice, maxPrice, page = 1, limit = 10 } = req.query;
 
     const filter = {};
 
-    // Apply filters based on query parameters
     if (category && category !== "all") {
       filter.category = category;
     }
@@ -76,14 +106,12 @@ router.get("/", async (req, res) => { // Mark the route as async
     const itemsPerPage = parseInt(limit, 10);
     const skip = (pageNumber - 1) * itemsPerPage;
 
-    // Fetch products and total count using await in async function
+    // Fetch products and total count
     const products = await Products.find(filter).skip(skip).limit(itemsPerPage).exec();
     const totalProducts = await Products.countDocuments(filter);
 
-    // Calculate total pages
     const totalPages = Math.ceil(totalProducts / itemsPerPage);
 
-    // Return products, total count, and pagination info
     res.status(200).json({
       products,
       totalProducts,

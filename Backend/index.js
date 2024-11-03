@@ -1,36 +1,40 @@
-const express = require('express')
+const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const morgan = require('morgan');
 require("dotenv").config();
 
 const uploadImage = require("./utils/uploadimage");
 
-
-const app = express()
+const app = express();
 const port = process.env.PORT || 4000;
 
-
-
-// middleware
-
+// Middleware
+app.use(helmet()); // Secure HTTP headers
+app.use(cors({ 
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+}));
 app.use(express.json({ limit: "25mb" }));
-// app.use(express.urlencoded({ limit: "25mb" }));
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));  
+app.use(bodyParser.urlencoded({ extended: true }));
 
+// Rate limiting
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100
+});
+app.use('/api/', limiter); // Apply to all API routes
 
-app.use(cors({ 
-    origin: 'http://localhost:5173',
-    credentials: true,
-  }));
-  
+// Logging
+app.use(morgan('combined'));
 
-
-//   routes
-
+// Routes
 const authRoutes = require('./src/users/user.route');
 const productRoutes = require('./src/products/products.route');
 const reviewRoutes = require('./src/reviews/reviews.route');
@@ -42,53 +46,34 @@ app.use('/api/auth', authRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/stats', statsRoutes);
-
 app.use('/api/cart', cartRoutes);
 app.use('/api/deal', dealRoutes);
 
-
-
-
-
-
-
-
-
-
-main().then(() => console.log('Mongodb connected successfully!')).catch(err => console.log(err));
-
-
-
-// mongoose dox
-
+// Database connection
 async function main() {
     await mongoose.connect(process.env.DB_URL);
-  
- 
-  }
+    console.log('Mongodb connected successfully!');
+}
+main().catch(err => console.log(err));
 
-
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
-
-
-
-// upload image routes
-app.post("/uploadImage", (req, res) => {
-  uploadImage(req.body.image)
-    .then((url) => res.send(url))
-    .catch((err) => res.status(500).send(err));
+// Upload image route
+app.post("/api/uploadImage", (req, res) => {
+    const { image } = req.body;
+    if (!image) {
+        return res.status(400).json({ error: "Image data is required" });
+    }
+    uploadImage(image)
+        .then((response) => res.status(200).json(response))
+        .catch((err) => res.status(500).json(err));
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
-
-
-
-
-
+// Start server
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+    console.log(`Example app listening on port ${port}`);
+});
