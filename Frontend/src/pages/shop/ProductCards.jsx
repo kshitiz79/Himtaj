@@ -36,7 +36,7 @@ const ProductCards = ({ products }) => {
               <img
                 src={product.image}
                 alt={product.name}
-                className="max-h-96 md:h-64 w-full object-cover"
+                className="max-h-96 md:h-96 w-full object-cover"
               />
             </Link>
 
@@ -59,10 +59,11 @@ const ProductCards = ({ products }) => {
             </button>
           </div>
           <div className="product__card__content">
-            <h4>{product.name}</h4>
-            <p>
+          <p>
               Rs {product.price} {product.oldPrice && <s>${product.oldPrice}</s>}
             </p>
+            <h4>{product.name}</h4>
+           
             <RatingStar rating={product.rating} />
           </div>
         </div>

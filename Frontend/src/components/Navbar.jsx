@@ -56,9 +56,12 @@ const Navbar = () => {
   return (
     <header className="fixed-nav-bar w-nav">
       <nav className="mx-auto px-4 flex justify-between items-center bg-[#d8f4f2]">
-        <div className="nav__logo relative">
-          <Link to="/">Himtaj</Link>
-        </div>
+      <div className="nav__logo relative">
+    <Link to="/">
+        <img src='/nav_logo.png' alt="Log" className="h-14 " /> 
+    </Link>
+</div>
+
 
         <ul className="nav__links flex-1 flex justify-center space-x-6">
           <li className='link'>
@@ -71,7 +74,7 @@ const Navbar = () => {
             <Link to="/gifts">Gifting</Link>
           </li>
           <li className='link'>
-            <Link to="/contact-us">Contact</Link>
+            <Link to="/collection">New Collection</Link>
           </li>
         </ul> 
 

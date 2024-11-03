@@ -300,6 +300,10 @@ header__content2 {
   color: goldenrod;
 }
 
+
+
+
+
 .product__card__content h4 {
   margin-bottom: 5px;
   font-size: 1.2rem;
@@ -317,6 +321,7 @@ header__content2 {
   font-weight: 400;
   color: var(--text-light);
 }
+
 
 .product__btn {
   text-align: center;

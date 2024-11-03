@@ -19,9 +19,10 @@ import AddProduct from "../dashboard/admin/AddProduct/AddProduct";
 import ManageProducts from "../dashboard/admin/ManageProduct/ManageProduct";
 import UpdateProduct from "../dashboard/admin/ManageProduct/UpdateProduct";
 import AdminDMain from "../dashboard/admin/Dashboard/AdminDMain";
-import { Contact } from "../pages/ContactUs/Contact";
+
 import Deals from "../dashboard/admin/Deals_&_Banners/Deals";
 import Gifts from "../pages/Gifts/Gifts";
+import Collection from "../pages/Collection/Collection";
 
 
 
@@ -58,7 +59,7 @@ const router = createBrowserRouter([
       },
 
       {
-        path:"/contact-us", element:<Contact />
+        path:"/collection", element:<Collection/>
        },
        {
         path:"/gifts", element:<Gifts />

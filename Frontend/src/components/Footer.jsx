@@ -16,12 +16,12 @@ const Footer = () => {
         <p>
             <span>
             <i className="ri-map-pin-fill"></i>  </span>
-            i12 alfa beeta hshs ,Ghaziadbad          
+            T3-236 , Golden-I , Techzone IV , Greater Noida West , Uttar Pradesh , 201306        
             </p>
             <p>
                 <span>
                 <i className="ri-mail-line"></i>  </span>
-                support@giidle.com
+                himtajjewellery@gmail.com
               
             </p>
             <p>

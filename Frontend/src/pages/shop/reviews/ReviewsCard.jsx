@@ -19,10 +19,11 @@ const ReviewsCard = ({ productReviews }) => {
 
     return (
         <div className="my-6 bg-white p-8">
+       
             <div>
                 {reviews.length > 0 ? (
                     <div>
-                        <h3 className="text-lg font-medium">All Comments...</h3>
+                        <h3 className="text-2xl font-medium">Customer Reviews</h3>
                         <div>
                             {reviews.map((review, index) => (
                                 <div key={index} className="mt-4">
@@ -48,6 +49,7 @@ const ReviewsCard = ({ productReviews }) => {
                         </div>
                     </div>
                 ) : (
+
                     <p>No reviews yet.</p>
                 )}
             </div>

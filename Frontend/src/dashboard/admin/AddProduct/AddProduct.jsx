@@ -28,25 +28,37 @@ const colors = [
     { label: 'Rose Gold', value: 'Rose Gold' },
     { label: 'Gold', value: 'Gold' }
 ];
+const metals= [
+    { label: 'Select Metal', value: '' },
+    { label: '18K Gold', value: '18K Gold' },
+    { label: '22K Gold', value: '22K Gold' },
+    { label: '925 Silver', value: '925 Silver' },
+    { label: 'Basic Silver', value: 'Basic Silver' },
+    { label: 'Imitate Jewelry', value: 'Imitate Jewelry' },
 
-const sizes = Array.from({ length: 11 }, (_, i) => i + 5).map(size => ({
+
+];
+
+const sizes = Array.from({ length: 21 }, (_, i) => i + 5).map(size => ({
     label: size.toString(),
     value: size.toString()
 }));
 
 const AddProduct = () => {
     const { user } = useSelector((state) => state.auth);
-
     const [product, setProduct] = useState({
         name: '',
         category: '',
         color: '',
         price: '',
+        oldPrice: '',
         description: '',
         isTrending: false,
-        size: '' // Optional field for size
+        size: '',
+        metal: '' 
     });
-    const [image, setImage] = useState('');
+    const [mainImage, setMainImage] = useState('');
+    const [additionalImages, setAdditionalImages] = useState([]);
 
     const [addProduct, { isLoading, error }] = useAddProductMutation();
     const navigate = useNavigate();
@@ -55,28 +67,38 @@ const AddProduct = () => {
         const { name, value, type, checked } = e.target;
         setProduct({
             ...product,
-            [name]: type === 'checkbox' ? checked : value // Handle checkbox value
+            [name]: type === 'checkbox' ? checked : value
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        if (!product.name || !product.category || !product.price || !product.color || !product.description) {
-            alert('Please fill in all required fields.');
+        // Check for required fields
+        if (!product.name || !product.category || !product.price || !product.color || !product.description || !mainImage) {
+            alert('Please fill in all required fields, including the main image.');
             return;
         }
-        
+    
         try {
-            await addProduct({ ...product, image, author: user?._id }).unwrap();
+            // Ensure mainImage and additionalImages are being sent to the backend
+            await addProduct({
+                ...product,
+                image: mainImage, // Set the main image field
+                additionalImages, // Include additional images array
+                author: user?._id
+            }).unwrap();
+            
             alert('Product added successfully!');
             setProduct({ name: '', category: '', color: '', price: '', description: '', isTrending: false, size: '' });
-            setImage('');
+            setMainImage('');
+            setAdditionalImages([]);
             navigate("/shop");
         } catch (err) {
             console.error('Failed to add product:', err);
         }
     };
+    
 
     return (
         <div className="container mx-auto mt-8">
@@ -103,8 +125,17 @@ const AddProduct = () => {
                     onChange={handleChange}
                     options={colors}
                 />
+
+<SelectInput
+                    label="Metal"  // Update label for clarity
+                    name="metal"
+                    value={product.metal}  // Updated to reflect state change
+                    onChange={handleChange}  // Event handler remains
+                    options={metals}  // Ensure metals options are passed
+                />
+
                 <SelectInput
-                    label="Size" // Add Size Select Input
+                    label="Size"
                     name="size"
                     value={product.size}
                     onChange={handleChange}
@@ -118,12 +149,27 @@ const AddProduct = () => {
                     value={product.price}
                     onChange={handleChange}
                 />
-               
+                 <TextInput
+                    label="Old Price"
+                    name="oldPrice"
+                    type="number"
+                    placeholder="100"
+                    value={product.oldPrice}
+                    onChange={handleChange}
+                />
+                
+
+                {/* Main Image Upload */}
                 <UploadImage
-                    name="image"
-                    id="image"
-                    value={image}
-                    setImage={setImage}
+                    name="mainImage"
+                    setImage={(url) => setMainImage(url)}
+                />
+
+                {/* Additional Images Upload */}
+                <UploadImage
+                    name="additionalImages"
+                    setImage={(urls) => setAdditionalImages(urls)}
+                    multiple // Allow multiple image selection
                 />
 
                 <div>
@@ -165,7 +211,6 @@ const AddProduct = () => {
                     </button>
                 </div>
             </form>
-
             {error && <p className="text-red-500 mt-4">Error adding product: {error.message}</p>}
         </div>
     );

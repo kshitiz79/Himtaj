@@ -9,21 +9,26 @@ import { useFetchProductByIdQuery, useUpdateProductMutation } from '../../../../
 const categories = [
     { label: 'Select Category', value: '' },
     { label: 'Earrings', value: 'Earrings' },
-    { label: 'Rings', value: 'rings' },
-    { label: 'Jewellery', value: 'jewellery' },
-    { label: 'Cosmetics', value: 'cosmetics' }
+    { label: 'Necklaces', value: 'Necklaces' },
+    { label: 'Studs', value: 'Studs' },
+    { label: 'Bracelets', value: 'Bracelets' },
+    { label: 'Rings', value: 'Rings' },
+    { label: 'Anklets', value: 'Anklets' },
+    { label: 'Idols & Coins', value: 'Idols & Coins' },
+    { label: "Men's Jewellery", value: "Men's Jewellery" },
+    { label: 'Kid\'s Jewellery', value: 'Kid\'s Jewellery' },
+    { label: 'Bridal Jewellery', value: 'Bridal Jewellery' },
+    { label: 'Fashion Jewellery', value: 'Fashion Jewellery' },
+    { label: 'Gold Jewellery', value: 'Gold Jewellery' }
 ];
 
 const colors = [
     { label: 'Select Color', value: '' },
-    { label: 'Black', value: 'black' },
-    { label: 'Red', value: 'red' },
-    { label: 'Gold', value: 'gold' },
-    { label: 'Blue', value: 'blue' },
-    { label: 'Silver', value: 'silver' },
-    { label: 'Beige', value: 'beige' },
-    { label: 'Green', value: 'green' }
+    { label: 'Silver', value: 'Silver' },
+    { label: 'Rose Gold', value: 'Rose Gold' },
+    { label: 'Gold', value: 'Gold' }
 ];
+
 
 const UpdateProduct = () => {
     const { id } = useParams();
@@ -48,6 +53,7 @@ const UpdateProduct = () => {
 
     useEffect(() => {
         if (productData) {
+            console.log("Fetched product data:", productData); // Log the fetched data
             setProduct({
                 name: name || '',
                 category: category || '',
@@ -73,24 +79,23 @@ const UpdateProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // If newImage is set, use it; otherwise, keep the old image URL
+        console.log("Submitting update with data:", product); // Log the data being submitted
+    
         const updatedProduct = {
             ...product,
             image: newImage ? newImage : product.image, 
             author: user?._id
         };
-
+    
         try {
-            await updateProduct({ id: id, ...updatedProduct }).unwrap();
+            await updateProduct({ id: id, ...updatedProduct }).unwrap(); // Ensure unwrap is being called
             alert('Product updated successfully!');
             await refetch();
             navigate("/dashboard/manage-products");
-
+    
         } catch (err) {
             console.error('Failed to update product:', err);
         }
-
     };
 
     if (isProductLoading) return <p>Loading product...</p>;

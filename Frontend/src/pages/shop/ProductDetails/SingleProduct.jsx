@@ -1,19 +1,56 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
+
 import { Link, useParams } from "react-router-dom";
 import RatingStar from "../../../components/RatingStar";
 import { useDispatch, useSelector } from "react-redux";
 import { useFetchProductByIdQuery } from "../../../redux/features/products/productsApi";
 import ReviewsCard from "../reviews/ReviewsCard";
 import { useAddItemToCartMutation } from "../../../redux/features/cart/cartApi";
+import EstimatedDeliverySection from "./EstimatedDeliverySection";
+import RecommendedProducts from "./Recommendtaion/RecommendedProducts";
+
+
+
+
+
+
 
 const SingleProduct = ({ refetchCart }) => {
   const { id } = useParams();
   const { data, error, isLoading } = useFetchProductByIdQuery(id);
   const [addItemToCart] = useAddItemToCartMutation();
   const userId = useSelector((state) => state.auth.user?._id);
+  const [isDescriptionOpen, setDescriptionOpen] = useState(false);
+  const [isShippingOpen, setShippingOpen] = useState(false);
+  const singleProduct = useMemo(() => data?.product || {}, [data]);
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
 
-  const singleProduct = data?.product || {};
+  useEffect(() => {
+    console.log('Fetched single product:', data);
+}, [data]);
+
+
+
+  useEffect(() => {
+    setCurrentImage(singleProduct.image);
+  }, [singleProduct]);
+
+
   const productReviews = data?.reviews || [];
+  const [currentImage, setCurrentImage] = useState(singleProduct.image);
+
+  useEffect(() => {
+    // Fetch recommended products from your API or define them manually
+    const fetchRecommendedProducts = async () => {
+      // Example: Replace this with your fetch logic
+      const response = await fetch('/api/recommended-products'); // Adjust the endpoint
+      const data = await response.json();
+      setRecommendedProducts(data);
+    };
+
+    fetchRecommendedProducts();
+  }, []);
+
 
   const handleAddToCart = async () => {
     const product = {
@@ -22,6 +59,7 @@ const SingleProduct = ({ refetchCart }) => {
       price: singleProduct.price,
       image: singleProduct.image,
       quantity: 1,
+      metal:singleProduct.metal,
       userId,
     };
 
@@ -39,17 +77,53 @@ const SingleProduct = ({ refetchCart }) => {
   if (isLoading) return <div className="loader">Loading...</div>;
   if (error) return <p>Error loading product. Please try again later.</p>;
 
+
+
+  const toggleDescription = () => {
+    setDescriptionOpen(prevState => !prevState);
+  };
+
+  const toggleShipping = () => {
+    setShippingOpen(prevState => !prevState);
+  };
+
+  const formatDescription = (description) => {
+    // Split the description into paragraphs
+    const paragraphs = description.split('\n').filter(p => p.trim() !== "");
+  
+    return paragraphs.map((paragraph, index) => {
+      // Check if the paragraph starts with a bullet point
+      if (paragraph.startsWith('*') || paragraph.startsWith('-')) {
+        return (
+          <li key={index} className="mb-1">{paragraph.replace(/^[*-]\s*/, '').trim()}</li>
+        );
+      } else if (paragraph.startsWith('The Design:')) {
+        return (
+          <h3 key={index} className="font-semibold mt-4">{paragraph}</h3>
+        );
+      } else if (paragraph.startsWith('Styling Tip:')) {
+        return (
+          <h3 key={index} className="font-semibold mt-4">{paragraph}</h3>
+        );
+      } else {
+        return (
+          <p key={index} className="mt-2">{paragraph}</p>
+        );
+      }
+    });
+  };
+
   return (
     <>
       <section className="section__container rounded bg-primary-light">
         <h2 className="section__header">Single Product Page</h2>
         <div className="section__subheader space-x-2">
           <span className="hover:text-primary">
-            <Link to="/">home</Link>
+            <Link to="/">Home</Link>
           </span>
           <i className="ri-arrow-right-s-line"></i>
           <span className="hover:text-primary">
-            <Link to="/shop">shop</Link>
+            <Link to="/shop">Shop</Link>
           </span>
           <i className="ri-arrow-right-s-line"></i>
           <span className="hover:text-primary">{singleProduct.name}</span>
@@ -57,62 +131,151 @@ const SingleProduct = ({ refetchCart }) => {
       </section>
 
       <section className="section__container mt-8">
-        <div className="flex flex-col items-center md:flex-row gap-8">
-          <div className="w-full md:w-1/2">
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Image Section */}
+        <div className="w-full md:w-1/2">
+        <div className="mb-4 flex justify-center">
+      <img
+        src={currentImage || "/path/to/placeholder.jpg"}
+        alt={singleProduct.name || "Product image"}
+        className="rounded-lg w-3/4  h-7rem object-cover border-red-500" // Ensure the main image uses object-cover
+      />
+    </div>
+
+
+          {/* Thumbnails */}
+          <div className="flex gap-2 overflow-x-auto justify-center">
             <img
-              src={singleProduct.image || "/path/to/placeholder.jpg"}
-              alt={singleProduct.name || "Product image"}
-              className="rounded-md w-full h-auto"
+              src={singleProduct.image}
+              alt="Primary"
+              onClick={() => setCurrentImage(singleProduct.image)}
+              className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${
+                currentImage === singleProduct.image ? "border-gray-800" : "border-transparent"
+              } hover:border-gray-800`}
             />
-          </div>
-
-          <div className="w-full md:w-1/2">
-            <h3 className="text-2xl font-semibold mb-4">
-              {singleProduct.name}
-            </h3>
-            <p className="text-xl text-primary mb-4">
-              Rs {singleProduct.price}
-              {singleProduct.oldPrice &&
-                singleProduct.oldPrice !== singleProduct.price && (
-                  <s className="ml-2 text-gray-500">
-                    ${singleProduct.oldPrice}
-                  </s>
-                )}
-            </p>
-            <p className="text-gray-700 mb-4"> <strong>Description:</strong> {singleProduct.description}</p>
-
-            <div className="flex flex-col space-y-2">
-              <p>
-                <strong>Category:</strong>  {singleProduct.category}
-              </p>
-              <p>
-                <strong>Color:</strong>  {singleProduct.color}
-              </p>
-              {singleProduct.size && (
-                <p>
-                  <strong>Available Size:</strong>  {singleProduct.size}
-                </p>
-              )}
-              <div className="flex gap-1 items-center">
-                <strong>Rating:</strong>
-                 <RatingStar rating={singleProduct.rating} />
-              </div>
-            </div>
-
-            <button
-              onClick={handleAddToCart}
-              className="mt-6 px-6 py-3 bg-primary text-white rounded-md"
-              disabled={isLoading || error}
-            >
-              Add to Cart
-            </button>
+            {singleProduct.additionalImages?.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt={`Reference ${index + 1}`}
+                onClick={() => setCurrentImage(img)}
+                className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${
+                  currentImage === img ? "border-gray-800" : "border-transparent"
+                } hover:border-gray-800`}
+              />
+            ))}
           </div>
         </div>
+
+
+
+
+
+
+
+        {/* Product Details Section */}
+
+        <div className="w-full md:w-1/2">
+      
+
+        <div className="flex items-center mb-2">
+  
+  <p className="text-3xl text-primary mr-2 "> <strong> Rs {singleProduct.price}</strong></p>
+      {singleProduct.oldPrice && singleProduct.oldPrice !== singleProduct.price && (
+          <p className="text-lg text-gray-500 line-through"> Rs {singleProduct.oldPrice}</p>
+      )}
+  </div>
+
+
+
+
+        <h1 className="text-3xl font-semibold ">{singleProduct.name}</h1>
+
+
+
+        
+
+
+
+          <div className="mt-4 space-y-2 ">
+          <p><strong>Metal</strong> {singleProduct.metal }</p>
+            <p><strong>Color:</strong> {singleProduct.color}</p>
+            
+
+            {singleProduct.size && <p><strong>Available Size:</strong> {singleProduct.size}</p>}
+            <p ><strong>Category:</strong> {singleProduct.category}</p>
+            <div className="flex items-center gap-1">
+              <strong>Rating:</strong> <RatingStar rating={singleProduct.rating} />
+            </div>
+          </div>
+
+          <EstimatedDeliverySection/>
+          <button
+            onClick={handleAddToCart}
+            className="mt-6 px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark"
+            disabled={isLoading || error}
+          >
+            Add to Cart
+          </button>
+
+
+
+          <div className="mt-12 text-gray-700">
+        <button
+          onClick={toggleDescription}
+          className="flex justify-between items-center w-3/5 py-2 font-semibold text-left text-primary hover:text-primary-dark"
+        >
+          <span>Description</span>
+          <span>{isDescriptionOpen ? '−' : '+'}</span>
+        </button>
+        {isDescriptionOpen && (
+          <ul className="list-disc ml-5 mt-2">
+            {formatDescription(singleProduct.description)}
+          </ul>
+        )}
+      </div>
+      <div className="mt-3 w-3/5">
+  <hr className="border-gray-300" />
+
+
+</div>
+
+
+
+      <div className="mt-5 text-gray-700">
+        <button
+          onClick={toggleShipping}
+          className="flex justify-between w-3/5 items-center  py-2 font-semibold text-left text-primary hover:text-primary-dark"
+        >
+          <span>Shipping</span>
+          <span>{isShippingOpen ? '−' : '+'}</span>
+        </button>
+        {isShippingOpen && (
+          <div className="ml-5 mt-2">
+               <p>Free express shipping</p>
+            <p>Standard shipping: 3-5 business days.</p>
+            <p>Express shipping: 1-2 business days.</p>
+            <p>Free shipping on orders above Rs. 1500.</p>
+          </div>
+        )}
+      </div>
+      <div className="mt-3 w-3/5">
+  <hr className="border-gray-300" />
+</div>
+<RecommendedProducts products={recommendedProducts} />
+        </div>
+
+    
+      </div>
       </section>
+
+
+
 
       <section className="section__container mt-8">
         <ReviewsCard productReviews={productReviews} />
       </section>
+
     </>
   );
 };

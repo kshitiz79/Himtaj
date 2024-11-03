@@ -31,7 +31,7 @@ export const productsApi = createApi({
     }),
 
     fetchTrendingProducts: builder.query({
-      query: () => `/trending`, // Endpoint for trending products
+      query: () => `/trending`,
       providesTags: ["Products"],
     }),
 
@@ -48,10 +48,6 @@ export const productsApi = createApi({
       query: (id) => `blogs/related/${id}`,
     }),
 
-
-
-
-    
     updateProduct: builder.mutation({
       query: ({ id, ...rest }) => ({
         url: `update-product/${id}`,
@@ -68,17 +64,27 @@ export const productsApi = createApi({
       }),
       invalidatesTags: (result, error, id) => [{ type: "Products", id }],
     }),
+
+    // New endpoint for searching products
+    searchProducts: builder.query({
+      query: (searchTerm) => ({
+        url: `/search`,
+        params: { query: searchTerm },
+      }),
+      providesTags: ["Products"],
+    }),
   }),
 });
 
 export const {
   useFetchAllProductsQuery,
   useFetchProductByIdQuery,
-  useFetchTrendingProductsQuery, // Export trending products query
+  useFetchTrendingProductsQuery,
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
   useFetchRelatedBlogsQuery,
+  useSearchProductsQuery, // Export the new search query
 } = productsApi;
 
 export default productsApi;
