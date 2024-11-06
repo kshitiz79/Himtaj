@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const DealsSection = () => {
+  const BASE_URL = "http://localhost:4000"; 
+  
   const [deal, setDeal] = useState({
     title: "",
     description: "",
     discount: 0,
-    imageUrl: "", // Image URL fetched from the backend
+    imageUrl: "",
     endDate: ""
   });
   const [countdown, setCountdown] = useState({});
@@ -19,7 +21,7 @@ const DealsSection = () => {
 
   const fetchDeal = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/deal");
+      const response = await axios.get(`${BASE_URL}/api/deal`);
       setDeal(response.data);
       startCountdown(response.data.endDate);
     } catch (error) {
@@ -28,7 +30,7 @@ const DealsSection = () => {
   };
 
   const startCountdown = (endDate) => {
-    clearInterval(intervalId); // Clear any existing interval to prevent multiple intervals
+    clearInterval(intervalId);
     const targetDate = new Date(endDate);
 
     const id = setInterval(() => {
@@ -54,9 +56,9 @@ const DealsSection = () => {
 
   const handleSave = async () => {
     try {
-      await axios.put("http://localhost:4000/api/deal", deal);
+      await axios.put(`${BASE_URL}/api/deal`, deal);
       setIsEditing(false);
-      startCountdown(deal.endDate); // Restart countdown with new date
+      startCountdown(deal.endDate);
     } catch (error) {
       console.error("Error updating deal:", error);
     }
@@ -67,10 +69,10 @@ const DealsSection = () => {
     reader.readAsDataURL(file);
     reader.onloadend = async () => {
       try {
-        const response = await axios.post("http://localhost:4000/api/uploadImage", {
+        const response = await axios.post(`${BASE_URL}/api/uploadImage`, {
           image: reader.result,
         });
-        setDeal({ ...deal, imageUrl: response.data }); // Save the new image URL
+        setDeal({ ...deal, imageUrl: response.data });
       } catch (error) {
         console.error("Image upload failed:", error);
       }
@@ -83,7 +85,7 @@ const DealsSection = () => {
         {deal.imageUrl ? (
           <img src={deal.imageUrl} alt="Deal" />
         ) : (
-          <p>No image available</p> // Display this if no image URL is available
+          <p>No image available</p>
         )}
       </div>
       <div className="deals__content">
@@ -97,17 +99,13 @@ const DealsSection = () => {
             />
             <textarea
               value={deal.description}
-              onChange={(e) =>
-                setDeal({ ...deal, description: e.target.value })
-              }
+              onChange={(e) => setDeal({ ...deal, description: e.target.value })}
               placeholder="Description"
             />
             <input
               type="number"
               value={deal.discount}
-              onChange={(e) =>
-                setDeal({ ...deal, discount: e.target.value })
-              }
+              onChange={(e) => setDeal({ ...deal, discount: e.target.value })}
               placeholder="Discount"
             />
             <input
@@ -121,7 +119,7 @@ const DealsSection = () => {
               type="file"
               onChange={(e) => handleImageUpload(e.target.files[0])}
             />
-
+            <button onClick={handleSave}>Save</button>
           </>
         ) : (
           <>
@@ -146,7 +144,7 @@ const DealsSection = () => {
                 <p>Seconds</p>
               </div>
             </div>
-
+            
           </>
         )}
       </div>
