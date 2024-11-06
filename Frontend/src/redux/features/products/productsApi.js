@@ -53,9 +53,12 @@ export const productsApi = createApi({
         url: `update-product/${id}`,
         method: "PATCH",
         body: rest,
+        credentials: "include",
       }),
       invalidatesTags: ["Products"],
     }),
+
+    
 
     deleteProduct: builder.mutation({
       query: (id) => ({

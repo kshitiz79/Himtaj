@@ -1,58 +1,38 @@
-const express = require("express"); // Importing the express framework for creating the API
-const Products = require("./products.model"); // Importing the Products model from products.model.js
-const Reviews = require("../reviews/reviews.model"); // Importing the Reviews model from reviews.model.js
+const express = require("express");
+const Products = require("./products.model");
+const Reviews = require("../reviews/reviews.model");
 const verifyToken = require("../middleware/verifyToken");
 const verifyAdmin = require("../middleware/verifyAdmin");
-const router = express.Router(); // Creating a new router object to handle routes
+const router = express.Router();
 
-
-
-
-
-
-
-router.post("/create-product", async (req, res) => { // Define a route for creating a new product
+router.post("/create-product", async (req, res) => {
   try {
-    const { name } = req.body; // Destructuring the 'name' from the request body (may be unused later)
+    const { name } = req.body;
 
-    // Create a new product instance
     const newProduct = new Products({
-      ...req.body, // Create a product using all fields from the request body
+      ...req.body,
     });
 
-    const savedProduct = await newProduct.save(); // Save the new product to the database
+    const savedProduct = await newProduct.save();
 
-    // Calculate the average rating
-    const reviews = await Reviews.find({ productId: savedProduct._id }); // Find all reviews for the newly saved product
-    if (reviews.length > 0) { // If there are reviews
-      const totalRating = reviews.reduce( // Calculate the total rating by summing up all review ratings
+    const reviews = await Reviews.find({ productId: savedProduct._id });
+    if (reviews.length > 0) {
+      const totalRating = reviews.reduce(
         (acc, review) => acc + review.rating,
         0
       );
 
-
-
-      
-      const averageRating = totalRating / reviews.length; // Calculate the average rating
-      savedProduct.rating = averageRating; // Assign the average rating to the product's rating
-      await savedProduct.save(); // Save the updated product with the new rating
+      const averageRating = totalRating / reviews.length;
+      savedProduct.rating = averageRating;
+      await savedProduct.save();
     }
 
-    res.status(201).json(savedProduct); // Return a success response with the newly created product
+    res.status(201).json(savedProduct);
   } catch (error) {
-    console.error("Error creating product:", error); // Log the error in case of failure
-    res.status(500).json({ message: "Failed to create product" }); // Return a failure response
+    console.error("Error creating product:", error);
+    res.status(500).json({ message: "Failed to create product" });
   }
 });
-
-
-
-
-
-
-
-
-
 
 
 
@@ -61,7 +41,7 @@ router.get("/search", async (req, res) => {
   const { query } = req.query;
 
   try {
-    const regex = new RegExp(query, "i"); // Case-insensitive search
+    const regex = new RegExp(query, "i");
     const products = await Products.find({
       $or: [
         { name: { $regex: regex } },
@@ -75,6 +55,7 @@ router.get("/search", async (req, res) => {
     res.status(500).json({ message: "Error searching products" });
   }
 });
+
 
 
 
@@ -101,12 +82,10 @@ router.get("/", async (req, res) => {
       }
     }
 
-    // Pagination setup
     const pageNumber = parseInt(page, 10);
     const itemsPerPage = parseInt(limit, 10);
     const skip = (pageNumber - 1) * itemsPerPage;
 
-    // Fetch products and total count
     const products = await Products.find(filter).skip(skip).limit(itemsPerPage).exec();
     const totalProducts = await Products.countDocuments(filter);
 
@@ -127,6 +106,8 @@ router.get("/", async (req, res) => {
 
 
 
+
+
 router.get("/trending", async (req, res) => {
   try {
     const trendingProducts = await Products.find({ isTrending: true });
@@ -137,118 +118,135 @@ router.get("/trending", async (req, res) => {
   }
 });
 
-
-
-
-// Get single post (public route)
-router.get("/:id", async (req, res) => { // Define a route to get a single product by its ID
+router.get("/:id", async (req, res) => {
   try {
-    const productId = req.params.id; // Extract the product ID from the URL parameters
+    const productId = req.params.id;
 
-    const product = await Products.findById(productId).populate( // Find the product by ID and populate the 'author' field
+    const product = await Products.findById(productId).populate(
       "author",
-      "email username" // Populate the 'email' and 'username' of the author
+      "email username"
     );
 
-    if (!product) { // If no product is found, return a 404 error
+    if (!product) {
       return res.status(404).send({ message: "Product not found" });
     }
 
-    const reviews = await Reviews.find({ productId }).populate( // Find all reviews for the product and populate the 'userId' field
+    const reviews = await Reviews.find({ productId }).populate(
       "userId",
-      "username email" // Populate the 'username' and 'email' of the user who wrote the review
+      "username email"
     );
 
-    res.status(200).send({ product, reviews }); // Return the product and its associated reviews
+    res.status(200).send({ product, reviews });
   } catch (error) {
-    console.error("Error fetching post:", error); // Log the error in case of failure
-    res.status(500).send({ message: "Failed to fetch post" }); // Return a failure response
+    console.error("Error fetching post:", error);
+    res.status(500).send({ message: "Failed to fetch post" });
   }
 });
 
-// update a post (protected route)
-router.patch("/update-product/:id",verifyToken,verifyAdmin ,async (req, res) => { // Define a route to update a product by its ID
-  try {
-    const productId = req.params.id; // Extract the product ID from the URL parameters
 
-    const updatedProduct = await Products.findByIdAndUpdate( // Find the product by ID and update it with the new data
+
+
+
+
+
+
+router.patch("/update-product/:id", async (req, res) => {
+  try {
+    const productId = req.params.id;
+    // const { title, content, category } = req.body;
+    const updatedProduct = await Products.findByIdAndUpdate(
       productId,
-      { ...req.body }, // Spread the new product data from the request body
-      { new: true } // Return the updated product after the update
+      { ...req.body },
+      { new: true }
     );
 
-    if (!updatedProduct) { // If no product is found, return a 404 error
+    if (!updatedProduct) {
       return res.status(404).send({ message: "Product not found" });
     }
 
-    res.status(200).send({ // Return a success message and the updated product
-      message: "Product updated successfully",
-      product: updatedProduct,
-    });
+    res
+      .status(200)
+      .send({
+        message: "Product updated successfully",
+        product: updatedProduct,
+      });
   } catch (error) {
-    console.error("Error fetching product:", error); // Log the error in case of failure
-    res.status(500).send({ message: "Failed to fetch product" }); // Return a failure response
+    console.error("Error fetching product:", error);
+    res.status(500).send({ message: "Failed to fetch product" });
   }
 });
 
-// delete a post with the related comment
-router.delete("/:id", async (req, res) => { // Define a route to delete a product by its ID
+
+
+
+
+
+
+
+
+router.delete("/:id", async (req, res) => {
   try {
-    const productId = req.params.id; // Extract the product ID from the URL parameters
+    const productId = req.params.id;
 
-    const deletedProduct = await Products.findByIdAndDelete(productId); // Find and delete the product by ID
+    const deletedProduct = await Products.findByIdAndDelete(productId);
 
-    if (!deletedProduct) { // If no product is found, return a 404 error
+    if (!deletedProduct) {
       return res.status(404).send({ message: "Post not found" });
     }
 
-    await Reviews.deleteMany({ productId: productId }); // Delete all reviews associated with the deleted product
+    await Reviews.deleteMany({ productId: productId });
 
-    res.status(200).send({ // Return a success message indicating the product and reviews were deleted
+    res.status(200).send({
       message: "Product and associated comments deleted successfully",
     });
   } catch (error) {
-    console.error("Error deleting post:", error); // Log the error in case of failure
-    res.status(500).send({ message: "Failed to delete post" }); // Return a failure response
+    console.error("Error deleting post:", error);
+    res.status(500).send({ message: "Failed to delete post" });
   }
 });
 
-// related products
-router.get("/related/:id", async (req, res) => { // Define a route to get related products
-  try {
-    const { id } = req.params; // Extract the product ID from the URL parameters
 
-    if (!id) { // If no ID is provided, return a 400 error
+
+
+
+
+
+
+router.get("/related/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
       return res.status(400).send({ message: "Product ID is required" });
     }
 
-    const product = await Products.findById(id); // Find the product by ID
+    const product = await Products.findById(id);
 
-    if (!product) { // If no product is found, return a 404 error
+    if (!product) {
       return res.status(404).send({ message: "Product not found" });
     }
 
-    const titleRegex = new RegExp( // Create a regex pattern for partial matching of the product name
+    const titleRegex = new RegExp(
       product.name
-        .split(" ") // Split the product name into individual words
-        .filter((word) => word.length > 1) // Filter out short words
-        .join("|"), // Join the words into a regex pattern
-      "i" // Case-insensitive matching
+        .split(" ")
+        .filter((word) => word.length > 1)
+        .join("|"),
+      "i"
     );
 
-    const relatedProducts = await Products.find({ // Find related products by matching name or category
-      _id: { $ne: id }, // Exclude the current product
+    const relatedProducts = await Products.find({
+      _id: { $ne: id },
       $or: [
-        { name: { $regex: titleRegex } }, // Match products with similar names
-        { category: product.category }, // Match products in the same category
+        { name: { $regex: titleRegex } },
+        { category: product.category },
       ],
     });
 
-    res.status(200).send(relatedProducts); // Return the related products
+    res.status(200).send(relatedProducts);
   } catch (error) {
-    console.error("Error fetching related products:", error); // Log the error in case of failure
-    res.status(500).send({ message: "Failed to fetch related products" }); // Return a failure response
+    console.error("Error fetching related products:", error);
+    res.status(500).send({ message: "Failed to fetch related products" });
   }
 });
 
-module.exports = router; // Export the router so it can be used in the main application
+module.exports = router;

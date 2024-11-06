@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import TextInput from './../AddProduct/TextInput';
@@ -29,11 +29,23 @@ const colors = [
     { label: 'Gold', value: 'Gold' }
 ];
 
+const metals = [
+    { label: 'Select Metal', value: '' },
+    { label: '18K Gold', value: '18K Gold' },
+    { label: '22K Gold', value: '22K Gold' },
+    { label: '925 Silver', value: '925 Silver' },
+    { label: 'Basic Silver', value: 'Basic Silver' },
+    { label: 'Imitate Jewelry', value: 'Imitate Jewelry' },
+];
+
+const sizes = Array.from({ length: 21 }, (_, i) => i + 5).map(size => ({
+    label: size.toString(),
+    value: size.toString()
+}));
 
 const UpdateProduct = () => {
     const { id } = useParams();
-
-    const navigate = useNavigate(); // For navigation
+    const navigate = useNavigate();
     const { user } = useSelector((state) => state.auth);
 
     const [product, setProduct] = useState({
@@ -41,58 +53,70 @@ const UpdateProduct = () => {
         category: '',
         color: '',
         price: '',
+        oldPrice: '',
         description: '',
-        image: '' // This will store the URL or the image file
+        isTrending: false,
+        size: '',
+        metal: '',
+        image: '', // Main image URL or file
+        additionalImages: [] // Array for additional images
     });
-    const [newImage, setNewImage] = useState(null); // For storing the new image
 
-    const { data: productData, isLoading: isProductLoading, error: fetchError, refetch } = useFetchProductByIdQuery(id); // Add refetch
-    const { name, category, color, description, image: imageURL, price } = productData?.product || {};
+    const [newImage, setNewImage] = useState(null); // For storing new main image
+    const [newAdditionalImages, setNewAdditionalImages] = useState([]); // For new additional images
 
+    const { data: productData, isLoading: isProductLoading, error: fetchError } = useFetchProductByIdQuery(id);
     const [updateProduct, { isLoading: isUpdating, error: updateError }] = useUpdateProductMutation();
 
     useEffect(() => {
         if (productData) {
-            console.log("Fetched product data:", productData); // Log the fetched data
+            const { name, category, color, price, oldPrice, description, isTrending, size, metal, image, additionalImages } = productData.product;
             setProduct({
                 name: name || '',
                 category: category || '',
                 color: color || '',
                 price: price || '',
+                oldPrice: oldPrice || '',
                 description: description || '',
-                image: imageURL || ''
+                isTrending: isTrending || false,
+                size: size || '',
+                metal: metal || '',
+                image: image || '',
+                additionalImages: additionalImages || []
             });
         }
     }, [productData]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
         setProduct({
             ...product,
-            [name]: value
+            [name]: type === 'checkbox' ? checked : value
         });
     };
 
     const handleImageChange = (image) => {
-        setNewImage(image); // Store new image
+        setNewImage(image);
+    };
+
+    const handleAdditionalImagesChange = (images) => {
+        setNewAdditionalImages(images);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Submitting update with data:", product); // Log the data being submitted
-    
+
         const updatedProduct = {
             ...product,
-            image: newImage ? newImage : product.image, 
+            image: newImage ? newImage : product.image,
+            additionalImages: newAdditionalImages.length > 0 ? newAdditionalImages : product.additionalImages,
             author: user?._id
         };
-    
+
         try {
-            await updateProduct({ id: id, ...updatedProduct }).unwrap(); // Ensure unwrap is being called
+            await updateProduct({ id, ...updatedProduct }).unwrap();
             alert('Product updated successfully!');
-            await refetch();
-            navigate("/dashboard/manage-products");
-    
+            navigate('/dashboard/manage-products');
         } catch (err) {
             console.error('Failed to update product:', err);
         }
@@ -105,7 +129,6 @@ const UpdateProduct = () => {
         <div className="container mx-auto mt-8">
             <h2 className="text-2xl font-bold mb-6">Update Product</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
-                {/* product name */}
                 <TextInput
                     label="Product Name"
                     name="name"
@@ -113,8 +136,6 @@ const UpdateProduct = () => {
                     value={product.name}
                     onChange={handleChange}
                 />
-
-                {/* category */}
                 <SelectInput
                     label="Category"
                     name="category"
@@ -122,8 +143,6 @@ const UpdateProduct = () => {
                     onChange={handleChange}
                     options={categories}
                 />
-
-                {/* color */}
                 <SelectInput
                     label="Color"
                     name="color"
@@ -131,8 +150,20 @@ const UpdateProduct = () => {
                     onChange={handleChange}
                     options={colors}
                 />
-
-                {/* price */}
+                <SelectInput
+                    label="Metal"
+                    name="metal"
+                    value={product.metal}
+                    onChange={handleChange}
+                    options={metals}
+                />
+                <SelectInput
+                    label="Size"
+                    name="size"
+                    value={product.size}
+                    onChange={handleChange}
+                    options={[{ label: 'Select Size', value: '' }, ...sizes]}
+                />
                 <TextInput
                     label="Price"
                     name="price"
@@ -141,17 +172,23 @@ const UpdateProduct = () => {
                     value={product.price}
                     onChange={handleChange}
                 />
-
-                {/* image upload */}
-                <UploadImage
-                    name="image"
-                    id="image"
-                    value={newImage || product.image} 
-                    setImage={handleImageChange} 
-                    placeholder='Upload a product image'
+                <TextInput
+                    label="Old Price"
+                    name="oldPrice"
+                    type="number"
+                    placeholder="100"
+                    value={product.oldPrice}
+                    onChange={handleChange}
                 />
-
-                {/* description */}
+                <UploadImage
+                    name="mainImage"
+                    setImage={handleImageChange}
+                />
+                <UploadImage
+                    name="additionalImages"
+                    setImage={handleAdditionalImagesChange}
+                    multiple
+                />
                 <div>
                     <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                         Description
@@ -161,12 +198,24 @@ const UpdateProduct = () => {
                         name="description"
                         id="description"
                         value={product.description}
-                        placeholder='Write a product description'
+                        placeholder="Write a product description"
                         onChange={handleChange}
                         className="add-product-InputCSS"
                     />
                 </div>
-
+                <div className="flex items-center">
+                    <input
+                        type="checkbox"
+                        name="isTrending"
+                        id="isTrending"
+                        checked={product.isTrending}
+                        onChange={handleChange}
+                        className="mr-2"
+                    />
+                    <label htmlFor="isTrending" className="text-sm font-medium text-gray-700">
+                        Mark as Trending Product
+                    </label>
+                </div>
                 <div>
                     <button
                         type="submit"
@@ -177,7 +226,6 @@ const UpdateProduct = () => {
                     </button>
                 </div>
             </form>
-
             {updateError && <p className="text-red-500 mt-4">Error updating product: {updateError.message}</p>}
         </div>
     );

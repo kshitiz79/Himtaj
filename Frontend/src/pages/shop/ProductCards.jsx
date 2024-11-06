@@ -36,7 +36,7 @@ const ProductCards = ({ products }) => {
               <img
                 src={product.image}
                 alt={product.name}
-                className="max-h-96 md:h-96 w-full object-cover"
+                className="max-h-96 md:h-80 w-full object-cover"
               />
             </Link>
 

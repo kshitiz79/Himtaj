@@ -4,6 +4,12 @@ import Home from "../pages/home/Home";
 import CategoryPage from "../pages/category/CategoryPage";
 import Search from "../pages/search/Search";
 import ShopPage from "../pages/shop/ShopPage";
+
+
+
+
+
+
 import SingleProduct from "../pages/shop/ProductDetails/SingleProduct";
 import Login from "../components/Login";
 import Register from "../components/Register";
@@ -12,6 +18,9 @@ import PrivateRoute from "./PrivateRoute";
 import UserDMain from "../dashboard/user/dashboard/UserDMain";
 import OrderDetails from "../dashboard/user/OrderDetail";
 
+
+
+
 import UserReviews from "../dashboard/user/UserReviews";
 import UserProfile from "../dashboard/user/UserProfile";
 import ManageUser from "../dashboard/admin/Users/ManageUser";
@@ -19,6 +28,12 @@ import AddProduct from "../dashboard/admin/AddProduct/AddProduct";
 import ManageProducts from "../dashboard/admin/ManageProduct/ManageProduct";
 import UpdateProduct from "../dashboard/admin/ManageProduct/UpdateProduct";
 import AdminDMain from "../dashboard/admin/Dashboard/AdminDMain";
+
+
+
+
+
+
 
 import Deals from "../dashboard/admin/Deals_&_Banners/Deals";
 import Gifts from "../pages/Gifts/Gifts";

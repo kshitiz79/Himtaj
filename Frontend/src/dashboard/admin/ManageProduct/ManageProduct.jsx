@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useDeleteProductMutation, useFetchAllProductsQuery, useFetchRelatedBlogsQuery } from '../../../../src/redux/features/products/productsApi';
+import React, { useState } from 'react';
+import { useDeleteProductMutation, useFetchAllProductsQuery } from '../../../../src/redux/features/products/productsApi';
 import { Link } from 'react-router-dom';
 import { formatDate } from './../../../utils/dataFormer';
 
@@ -16,7 +16,6 @@ const ManageProducts = () => {
         limit: productsPerPage
     });
 
-    // console.log(products)
     const [deleteProduct] = useDeleteProductMutation();
 
     const handleDelete = async (id) => {
@@ -28,7 +27,6 @@ const ManageProducts = () => {
             console.error("Failed to delete the blog post:", error);
         }
     };
-
 
     // pagination control from shop page
     const startProduct = (currentPage - 1) * productsPerPage + 1;
@@ -76,6 +74,9 @@ const ManageProducts = () => {
                                             No.
                                         </th>
                                         <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                            Image
+                                        </th>
+                                        <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                             Product name
                                         </th>
                                         <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
@@ -98,6 +99,9 @@ const ManageProducts = () => {
                                                 <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700 ">
                                                     {index + 1}
                                                 </th>
+                                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                                                    <img src={product.image} alt={product.name} className="h-16 w-16 object-cover" />
+                                                </td>
                                                 <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700 cursor-pointer hover:text-primary">
                                                     <Link to={`/shop/${product?._id}`}>{product?.name}</Link>
                                                 </th>
@@ -157,18 +161,14 @@ const ManageProducts = () => {
                             <div className="w-full md:w-6/12 px-4 mx-auto text-center">
                                 <div className="text-sm text-blueGray-500 font-semibold py-1">
                                     Made by{" "}
-                                  
-                                        Kshitiz
-                         
-                                 
+                                    Kshitiz
                                     <a
-                                       
                                         className="text-blueGray-500 hover:text-blueGray-800"
-                                      
                                     >
                                         {" "}
                                        Maurya
                                     </a>
+
                                     .
                                 </div>
                             </div>
