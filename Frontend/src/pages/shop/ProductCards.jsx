@@ -15,16 +15,21 @@ const ProductCards = ({ products }) => {
       return;
     }
 
-    await addItemToCart({
-      productId: product._id,
-      name: product.name,
-      price: product.price,
-      quantity: 1,
-      userId: userId,
-    });
+    try {
+      await addItemToCart({
+        productId: product._id,
+        name: product.name,
+        image: product.image, // Include the image field here
+        price: product.price,
+        quantity: 1,
+        userId: userId,
+      });
 
-    setAddedProductId(product._id); // Temporarily mark product as added for feedback
-    setTimeout(() => setAddedProductId(null), 1500); // Clear feedback after 1.5s
+      setAddedProductId(product._id); // Temporarily mark product as added for feedback
+      setTimeout(() => setAddedProductId(null), 1500); // Clear feedback after 1.5s
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+    }
   };
 
   return (

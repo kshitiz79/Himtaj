@@ -25,7 +25,7 @@ const Trending = () => {
         <ProductCards products={products.slice(0, visibleProducts)} />
       </div>
 
-      <div className="product__btn">
+      <div className="product__btn mt-4">
         {visibleProducts < products.length && (
           <button className="btn" onClick={loadMoreProducts}>
             Load More

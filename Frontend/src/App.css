@@ -218,16 +218,26 @@ header__content2 {
 
 .categories__card {
   text-align: center;
+  transition: transform 0.9s, box-shadow 0.9s;
+ 
 }
+
+
 
 .categories__card img {
   max-width: 100px;
   margin: auto;
   margin-bottom: 1rem;
-  border: 5px solid var(  --primary-color-light);
-
+  border: 5px solid var(--primary-color-light);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s, transform 0.3s;
 }
+
+.categories__card img:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+}
+
 
 .categories__card h4 {
   font-size: 1.2rem;
@@ -430,7 +440,7 @@ header__content2 {
 }
 
 .banner__card p {
-  color: var(--text-light);
+  color: var(--text-dark);
 }
 
 .blog__container {
@@ -481,7 +491,7 @@ header__content2 {
 .footer__container {
   max-width: var(--max-width-1200);
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 

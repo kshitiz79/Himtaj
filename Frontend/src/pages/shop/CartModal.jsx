@@ -1,9 +1,15 @@
+// components/CartModal.jsx
 import React from "react";
 import OrderSummary from "./OrderSummary";
-import { useRemoveItemFromCartMutation, useUpdateCartItemMutation, useFetchCartQuery } from '../../redux/features/cart/cartApi';
-import { getBaseUrl } from "../../../../Frontend/src/utils/baseURL"; // Import getBaseUrl
+import {
+  useRemoveItemFromCartMutation,
+  useUpdateCartItemMutation,
+  useFetchCartQuery,
+} from '../../redux/features/cart/cartApi';
+import { getBaseUrl } from "../../../../Frontend/src/utils/baseURL";
 
 const CartModal = ({ isOpen, onClose, userId }) => {
+
   const { data: products = [], isLoading } = useFetchCartQuery(userId);
 
   const [removeItemFromCart] = useRemoveItemFromCartMutation();
@@ -48,7 +54,6 @@ const CartModal = ({ isOpen, onClose, userId }) => {
             products.map((item) => (
               <div key={item._id} className="flex items-center justify-between shadow-md p-5 mb-4">
                 <div className="flex items-center">
-                  {/* Conditionally render the image URL */}
                   <img
                     src={
                       item.image
@@ -76,7 +81,8 @@ const CartModal = ({ isOpen, onClose, userId }) => {
               </div>
             ))
           )}
-          {products.length > 0 && <OrderSummary products={products} />}
+        {products.length > 0 && <OrderSummary products={products} />}
+
         </div>
       </div>
     </div>

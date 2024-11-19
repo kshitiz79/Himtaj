@@ -27,34 +27,24 @@ const Footer = () => {
             <p>
                 <span>
                 <i className="ri-phone-fill"></i> </span>
-                91+123456
+                +91 9773690444
                
             </p>
           
   
     </div>
     <div className='footer__col'>
-                <h4>
-                    COMPONY
+              
+    <h4>
+                Quick Links
                 </h4>
                 <a href="/">Home</a>
                 <a href="/">About US</a>
                 <a href="/">Work With Us</a>
                 <a href="/">Our Blogs</a>
-                <a href="/">Terms & Condition</a>
-
+              
             </div>
-            <div className='footer__col'>
-                <h4>
-                UseFUl Links
-                </h4>
-                <a href="/">Home</a>
-                <a href="/">About US</a>
-                <a href="/">Work With Us</a>
-                <a href="/">Our Blogs</a>
-                <a href="/">Terms & Condition</a>
-
-            </div>
+           
             <div className='footer__col'>
                 <h4>
                  INSTAGRAM
@@ -63,9 +53,7 @@ const Footer = () => {
                     <img src={instaImg } alt=""/>
                     <img src={instaImg2 } alt=""/>
                     <img src={instaImg3 } alt=""/>
-                    <img src={instaImg4 } alt=""/>
-                    <img src={instaImg5 } alt=""/>
-                    <img src={instaImg6 } alt=""/>
+               
 
                 </div>
                

@@ -1,80 +1,65 @@
-// routes/cart.js
+
 const express = require('express');
+const mongoose = require('mongoose');
+
 const Cart = require('./cart.model');
 const router = express.Router();
 
+
+const asyncHandler = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+
 // Add item to cart
-router.post('/add', async (req, res) => {
-  console.log("Received request body:", req.body); // Log for debugging
+router.post('/add', asyncHandler(async (req, res) => {
+  const { productId, name, image, price, quantity, userId } = req.body;
 
-  try {
-    const { productId, name, price, quantity, userId } = req.body;
-
-    // Validate each field to ensure it's present and correctly formatted
-    if (!productId || !name || !price || !quantity || !userId) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    // Ensure price and quantity are numbers
-    const parsedPrice = Number(price);
-    const parsedQuantity = Number(quantity);
-
-    if (isNaN(parsedPrice) || isNaN(parsedQuantity)) {
-      return res.status(400).json({ message: "Price and quantity must be numbers" });
-    }
-
-    // Handle the addition of the item to the cart (example logic)
-    let cartItem = await Cart.findOne({ productId, userId });
-
-    if (cartItem) { 
-      // If the item exists, update quantity
-      cartItem.quantity += parsedQuantity;
-    } else {
-      // Otherwise, create a new cart item
-      cartItem = new Cart({
-        productId,
-        name,
-        price: parsedPrice,
-        quantity: parsedQuantity,
-        userId
-      });
-    }
-
-    await cartItem.save();
-    res.status(200).json(cartItem);
-  } catch (error) {
-    console.error("Error adding item to cart:", error);
-    res.status(500).json({ message: "Server error" });
+  if (!productId || !name || !image || !price || !quantity || !userId) {
+    return res.status(400).json({ message: "All fields are required" });
   }
-});
 
+  if (!mongoose.Types.ObjectId.isValid(productId) || !mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ message: "Invalid productId or userId" });
+  }
 
+  const parsedPrice = Number(price);
+  const parsedQuantity = Number(quantity);
+
+  if (isNaN(parsedPrice) || isNaN(parsedQuantity)) {
+    return res.status(400).json({ message: "Price and quantity must be numbers" });
+  }
+
+  const cartItem = await Cart.findOneAndUpdate(
+    { productId, userId },
+    { 
+      $inc: { quantity: parsedQuantity }, 
+      $setOnInsert: { name, image, price: parsedPrice } 
+    },
+    { new: true, upsert: true }
+  );
+  res.status(200).json(cartItem);
+}));
 // Update quantity
-router.put('/update/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { type } = req.body; // Use "type" to specify increment or decrement
+router.put('/update/:id', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { type } = req.body;
 
-    const cartItem = await Cart.findById(id);
-    if (!cartItem) return res.status(404).json({ message: 'Item not found' });
-
-    // Increment or decrement based on type
-    if (type === 'increment') {
-      cartItem.quantity += 1;
-    } else if (type === 'decrement') {
-      if (cartItem.quantity > 1) {
-        cartItem.quantity -= 1;
-      }
-    } else {
-      return res.status(400).json({ message: 'Invalid update type' });
-    }
-
-    await cartItem.save();
-    res.status(200).json(cartItem);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid cart item ID' });
   }
-});
+
+  const cartItem = await Cart.findById(id);
+  if (!cartItem) return res.status(404).json({ message: 'Item not found' });
+
+  if (type === 'increment') {
+    cartItem.quantity += 1;
+  } else if (type === 'decrement' && cartItem.quantity > 1) {
+    cartItem.quantity -= 1;
+  } else {
+    return res.status(400).json({ message: 'Invalid update type' });
+  }
+
+  await cartItem.save();
+  res.status(200).json(cartItem);
+}));
 
 // Remove item from cart
 router.delete('/remove/:id', async (req, res) => {
@@ -99,14 +84,25 @@ router.delete('/clear/:userId', async (req, res) => {
 });
 
 // Get all cart items for a user
+// routes/cart.js
 router.get('/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    const cartItems = await Cart.find({ userId });
-    res.status(200).json(cartItems);
+    const cartItems = await Cart.find({ userId })
+      .populate('productId', 'image'); // Populate productId with image field
+
+    // Map the cart items to include the image field from the product
+    const cartItemsWithImage = cartItems.map(item => ({
+      ...item.toObject(),
+      image: item.productId.image,
+    }));
+
+    res.status(200).json(cartItemsWithImage);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching cart items:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
+
 
 module.exports = router;

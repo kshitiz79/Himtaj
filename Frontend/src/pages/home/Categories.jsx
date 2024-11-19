@@ -37,7 +37,7 @@ const Categories = () => {
     {categories.map((category, index) => (
       <Link 
         key={index}     
-        to={`/shop/category/${category.path}`} // Navigate to the category page with category path
+        to={`/shop/category/${category.path}`} 
         className="categories__card"
       > 
         <img src={category.image} alt={category.name} />

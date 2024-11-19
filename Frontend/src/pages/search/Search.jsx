@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useSearchProductsQuery } from './../../redux/features/products/productsApi';
 import ProductCards from '../shop/ProductCards';
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const { data: filteredProducts = [], error, isLoading } = useSearchProductsQuery(searchQuery, {
-    skip: !searchQuery, // Only run the query if there is a search term
+    skip: !searchQuery, 
   });
 
   const handleSearch = () => {
-    // The query will automatically re-run when `searchQuery` changes
+    
   };
 
   return (

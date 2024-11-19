@@ -6,6 +6,7 @@ import avatarImg from "../assets/avatar.png";
 import { logout } from '../redux/features/auth/authSlice';
 import { useLogoutUserMutation } from '../redux/features/auth/authApi';
 import { useFetchCartQuery } from '../redux/features/cart/cartApi';
+import Search from './Search';
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.auth); // First, get user data from Redux
@@ -17,6 +18,8 @@ const Navbar = () => {
   const handleCartToggle = () => {
     setIsCartOpen(!isCartOpen);
   };
+
+  
 
   const dispatch = useDispatch();
   const [logoutUser] = useLogoutUserMutation();
@@ -80,9 +83,7 @@ const Navbar = () => {
 
         <div className="nav__icons relative">
           <span>
-            <Link to="/search">
-              <i className="ri-search-line"></i>
-            </Link>
+            <Search/>
           </span>
           <span>
             <button onClick={handleCartToggle} className='hover:text-primary relative'>
