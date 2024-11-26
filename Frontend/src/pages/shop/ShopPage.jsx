@@ -30,7 +30,7 @@ const ShopPage = () => {
   });
   
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(8);
+  const [productsPerPage] = useState(20);
 
   const { category, color, priceRange } = filtersState;
   const [minPrice, maxPrice] = priceRange.split('-').map(Number);
@@ -68,15 +68,15 @@ const ShopPage = () => {
 
   return (
       <>
-          <section className="section__container rounded bg-primary-light">
-              <h2 className="section__header">Shop Page</h2>
-              <p className="section__subheader">
-                  Discover the Hottest Picks: Elevate Your Style with Our Curated
-                  Collection of Trending Women's Fashion Products.
-              </p>
-          </section>
+        <section className="section__container3 ">
+        <img 
+          src="shoppage.gif" 
+          alt="Shop Page GIF" 
+          className="w-full rounded" 
+        />
+      </section>
           <section className='section__container'>
-              <div className='flex flex-col md:flex-row md:gap-12 gap-8'>
+              <div className='flex flex-col md:flex-row md:gap-12 md:sticky gap-8'>
                   {/* left side */}
                   <ShopFiltering
                       filters={filters}

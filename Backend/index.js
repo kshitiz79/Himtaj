@@ -44,6 +44,10 @@ const reviewRoutes = require('./src/reviews/reviews.route');
 const statsRoutes = require('./src/stats/stats.route');
 const cartRoutes = require('./src/cart/cart.route');
 const dealRoutes = require('./src/deals/deals.route');
+const couponRoutes = require('./src/coupon/coupon.route');
+
+
+
 
 app.use('/api/auth', authRoutes);
 app.use('/api/product', productRoutes);
@@ -51,7 +55,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/deal', dealRoutes);
-
+app.use('/api/coupon', couponRoutes);
 // Database connection
 // Database connection
 async function main() {

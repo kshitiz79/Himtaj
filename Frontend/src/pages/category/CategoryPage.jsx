@@ -11,19 +11,43 @@ const CategoryPage = () => {
     category: categoryName !== 'all' ? categoryName : '', // Filter by category, or get all if 'all'
   });
 
+  // Scroll to top when page loads
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []); // Scroll to the top when the page loads
+  }, []);
+
+  // Category images mapping
+  const categoryImages = {
+    "Earrings": '/1.png',
+    "Necklaces": '/2.png',
+    "Studs": '/3.png',
+    "Bracelets": '/4.png',
+    "Rings": '/5.png',
+    "Anklets": '/6.png',
+    "Idols & Coins": '/7,png',
+    "Men's Jewellery": '/8.png',
+    "Kid's Jewellery": '/9.png',
+    "Bridal Jewellery": '/10.png',
+    "Fashion Jewellery": '/11.png',
+    "Gold Jewellery": '/12.png',
+    "all": '/defau' // Default image for 'all' or unspecified categories
+  };
+
+  // Get image URL based on categoryName
+  const categoryImage =
+    categoryImages[categoryName] || '/images/default.jpg'; // Fallback to default
 
   return (
     <>
-      <section className="section__container bg-primary-light">
-        <h2 className="section__header capitalize">{categoryName}</h2>
-        <p className="section__subheader">
-          {data?.products?.length > 0
-            ? `Browse our selection of ${categoryName} products.`
-            : `No products available for ${categoryName}.`}
-        </p>
+      <section >
+        <div className="relative">
+          <img
+            src={categoryImage}
+            alt={`${categoryName} banner`}
+            className="w-full h-full  rounded-lg"
+          />
+       
+        </div>
       </section>
 
       <div className="section__container">

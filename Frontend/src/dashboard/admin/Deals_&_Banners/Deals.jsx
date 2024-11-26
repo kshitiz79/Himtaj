@@ -38,21 +38,21 @@ const Deals = () => {
   const handleImageUpload = async (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
+  
     reader.onloadend = async () => {
-      setUploading(true);
       try {
-        const response = await axios.post(`${getBaseUrl()}/uploadImage`, {
-          image: reader.result,
+        const response = await axios.post(`${getBaseUrl()}/api/uploadImage`, {
+          image: reader.result, // Send base64-encoded image
         });
-        setDealData((prev) => ({ ...prev, image: response.data }));
+        setDealData((prev) => ({ ...prev, image: response.data })); // Save image URL
         alert("Image uploaded successfully");
       } catch (error) {
         console.error("Image upload failed:", error);
-      } finally {
-        setUploading(false);
+        alert("Failed to upload image");
       }
     };
-  }
+  };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -78,11 +78,11 @@ const Deals = () => {
             name="title"
             value={dealData.title}
             onChange={handleChange}
-            className="input-field"
+            className="input-field w-[29rem]"
             placeholder="Deal Title"
           />
         </div>
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium">Description</label>
           <textarea
             name="description"
@@ -91,8 +91,8 @@ const Deals = () => {
             className="input-field"
             placeholder="Deal Description"
           />
-        </div>
-        <div>
+        </div> */}
+        {/* <div>
           <label className="block text-sm font-medium">Discount (%)</label>
           <input
             type="number"
@@ -101,7 +101,7 @@ const Deals = () => {
             onChange={handleChange}
             className="input-field"
           />
-        </div>
+        </div> */}
         <div>
           <label className="block text-sm font-medium">End Date</label>
           <input
@@ -129,7 +129,7 @@ const Deals = () => {
           />
           {uploading && <p>Uploading image...</p>}
         </div>
-        <button type="submit" className="submit-btn" disabled={uploading}>
+        <button type="submit" className="btn" disabled={uploading}>
           {uploading ? "Updating..." : "Update Deal"}
         </button>
       </form>

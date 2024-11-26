@@ -21,6 +21,8 @@ import AdminDMain from "../dashboard/admin/Dashboard/AdminDMain";
 import Deals from "../dashboard/admin/Deals_&_Banners/Deals";
 import Gifts from "../pages/Gifts/Gifts";
 import Collection from "../pages/Collection/Collection";
+import Thanks from "../pages/Thanks/Thanks";
+import AddCoupon from "../dashboard/admin/AddCoupon/AddCoupon";
 
 
 
@@ -62,6 +64,9 @@ const router = createBrowserRouter([
        {
         path:"/gifts", element:<Gifts />
        },
+       {
+        path:"/thanks", element:<Thanks />
+       },
       {
         path:"/dashboard",
         element:<DashboardLayout/>,
@@ -89,6 +94,10 @@ const router = createBrowserRouter([
 
           
           { path: 'deals-banners', element: <PrivateRoute><Deals/></PrivateRoute>},
+
+
+          { path: 'add-coupon', element: <PrivateRoute><AddCoupon/></PrivateRoute>},
+
         ]
       }
     ] 

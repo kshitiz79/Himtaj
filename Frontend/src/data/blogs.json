@@ -1,30 +1,44 @@
 [
-    {
-      "id": 1,
-      "title": "Mastering the Art of Capsule Wardrobes",
-      "subtitle": "Timeless Elegance",
-      "date": "2024-10-28",
-      "imageUrl": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    {
-      "id": 2,
-      "title": "Unveiling the Hottest Beachwear Trends",
-      "subtitle": "Summer Breeze",
-      "date": "2024-10-28",
-      "imageUrl": "https://images.unsplash.com/photo-1700159017572-de76bb0c5719?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    {
-      "id": 3,
-      "title": "Navigating the World of Women's Tailoring",
-      "subtitle": "Power Dressing",
-      "date": "2024-10-28",
-      "imageUrl": "https://plus.unsplash.com/premium_photo-1682142715511-27bfbfdc044f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    {
-        "id": 4,
-        "title": "The World's Best Fashion Fair 2025",
-        "subtitle": "New York Times",
-        "date": "25th May 2025",
-        "imageUrl": "https://plus.unsplash.com/premium_photo-1713720663924-4e3fe8f20f79?q=80&w=1948&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-      }
-  ]
+  {
+    "id": 1,
+    "title": "Elegant Designs and Exceptional Quality",
+    "subtitle": "Priya Mehta, Mumbai",
+    "testimonial": "I recently purchased a pair of earrings from Himtaj, and I couldn’t be happier! The intricate design and craftsmanship are stunning. I’ve received so many compliments every time I wear them. Thank you, Himtaj, for offering such exquisite jewelry!",
+      "imageUrl": "./ttestemonital12.png"
+  },
+  {
+    "id": 2,
+    "title": "Trusted Brand for Every Occasion",
+    "subtitle": "Rohini Sharma, Delhi",
+    "testimonial": "Himtaj has become my go-to online jewelry store for all occasions. Their collection is elegant yet affordable, and the quality is unmatched. The delivery was prompt, and the packaging was beautiful. Highly recommended!",
+   "imageUrl": "./testemonial7.jpg"
+  },
+  {
+    "id": 3,
+    "title": "Great Customer Service",
+    "subtitle": "Ankit Verma, Bangalore",
+    "testimonial": "I was skeptical about ordering jewellery online, but Himtaj changed my perspective. The customer service team was super helpful and answered all my questions. The anklet I purchased is even more gorgeous in person!",
+     "imageUrl": "/testemonial10.png"
+  },
+  {
+    "id": 4,
+    "title": "Perfect Blend of Tradition and Modernity",
+    "subtitle": "Sanjay Patel, Ahmedabad",
+    "testimonial": "The designs at Himtaj beautifully blend traditional aesthetics with modern styles. I gifted a silver necklace set to my sister, and she loved it. Will shop here again!",
+     "imageUrl": "/testemonial9.png"
+  },
+  {
+    "id": 5,
+    "title": "Affordable Luxury",
+    "subtitle": "Neha Kapoor, Jaipur",
+    "testimonial": "I’m amazed how Himtaj offers such luxurious jewelry at affordable prices. The silver bangle I bought looks so premium and perfectly matches all my outfits. Shopping with Himtaj has been a delight!",
+  "imageUrl": "./testemonial11.jpg"
+  },
+  {
+    "id": 6,
+    "title": "Hassle-Free Shopping Experience",
+    "subtitle": "Arjun Desai, Pune",
+    "testimonial": "From browsing the collection to placing the order, everything was seamless. The website is user-friendly, and the detailed product descriptions helped me make the right choice. Can’t wait to shop again!",
+    "imageUrl": "./testemonial8.png"
+  }
+]

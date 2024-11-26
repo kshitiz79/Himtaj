@@ -80,76 +80,50 @@ const DealsSection = () => {
   };
 
   return (
-    <section className="section__container deals__container">
-      <div className="deal__image">
-        {deal.imageUrl ? (
-          <img src={deal.imageUrl} alt="Deal" />
-        ) : (
-          <p>No image available</p>
-        )}
+<section className="deals__container">
+  {/* Image Section */}
+  <div className="deals__image">
+    {deal.imageUrl ? (
+      <img src={deal.imageUrl} alt="Deal Banner" />
+    ) : (
+      <p>No image available</p>
+    )}
+  </div>
+
+  {/* Content Section */}
+  <div className="deals__content">
+    {/* Left-aligned text */}
+    <div className="deals__text">
+      <h4> {deal.title}</h4>
+   
+    </div>
+
+    {/* Right-aligned countdown */}
+    <div className="deals__countdown">
+      <div className="deals__countdown__card">
+        <h4>{countdown.days || "0"}</h4>
+        <p>Days</p>
       </div>
-      <div className="deals__content">
-        {isEditing ? (
-          <>
-            <input
-              type="text"
-              value={deal.title}
-              onChange={(e) => setDeal({ ...deal, title: e.target.value })}
-              placeholder="Title"
-            />
-            <textarea
-              value={deal.description}
-              onChange={(e) => setDeal({ ...deal, description: e.target.value })}
-              placeholder="Description"
-            />
-            <input
-              type="number"
-              value={deal.discount}
-              onChange={(e) => setDeal({ ...deal, discount: e.target.value })}
-              placeholder="Discount"
-            />
-            <input
-              type="datetime-local"
-              value={new Date(deal.endDate).toISOString().substring(0, 16)}
-              onChange={(e) =>
-                setDeal({ ...deal, endDate: new Date(e.target.value) })
-              }
-            />
-            <input
-              type="file"
-              onChange={(e) => handleImageUpload(e.target.files[0])}
-            />
-            <button onClick={handleSave}>Save</button>
-          </>
-        ) : (
-          <>
-            <h4> Get Up To {deal.discount}% Discount</h4>
-            <h5>{deal.title}</h5>
-            <p>{deal.description}</p>
-            <div className="deals__countdown flex_wrap">
-              <div className="deals__countdown__card">
-                <h4>{countdown.days || "0"}</h4>
-                <p>Days</p>
-              </div>
-              <div className="deals__countdown__card">
-                <h4>{countdown.hours || "0"}</h4>
-                <p>Hours</p>
-              </div>
-              <div className="deals__countdown__card">
-                <h4>{countdown.minutes || "0"}</h4>
-                <p>Minutes</p>
-              </div>
-              <div className="deals__countdown__card">
-                <h4>{countdown.seconds || "0"}</h4>
-                <p>Seconds</p>
-              </div>
-            </div>
-            
-          </>
-        )}
+      <div className="deals__countdown__card">
+        <h4>{countdown.hours || "0"}</h4>
+        <p>Hours</p>
       </div>
-    </section>
+      <div className="deals__countdown__card">
+        <h4>{countdown.minutes || "0"}</h4>
+        <p>Minutes</p>
+      </div>
+      <div className="deals__countdown__card">
+        <h4>{countdown.seconds || "0"}</h4>
+        <p>Seconds</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  
   );
+  
 };
 
 export default DealsSection;

@@ -15,13 +15,13 @@ const Trending = () => {
   if (error) return <p>Error loading trending products.</p>;
 
   return (
-    <section className="section__container product__container">
+    <section className="section__container2 product__container">
       <h2 className="section__header">Trending Products</h2>
       <p className="section__subheader mb-12">
         Discover the hottest picks: our handpicked selection of trending products.
       </p>
 
-      <div className="mt-16">
+      <div className="mt-1">
         <ProductCards products={products.slice(0, visibleProducts)} />
       </div>
 

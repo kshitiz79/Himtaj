@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../redux/features/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
 import QRCode from "react-qr-code";
+import Coupon from "./Coupon";
 
 const OrderSummary = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [discount, setDiscount] = useState(0);
 
   // Access user and cart data from Redux
   const { user } = useSelector((state) => state.auth);
@@ -15,20 +17,23 @@ const OrderSummary = () => {
   const [paymentMethod, setPaymentMethod] = useState(null);
 
   // UPI Payment Details
-  const upiId = "8127520552@ptsbi"; // Replace with your UPI ID
-  const upiName = "Your Name"; // Replace with your name
+  const upiId = "8127520552@ptsbi";
+  const upiName = "Your Name";
+
+  const selectedItems = products.reduce((acc, product) => acc + product.quantity, 0);
 
   // Calculate totals
   const totalPrice = products.reduce(
     (acc, product) => acc + product.price * product.quantity,
     0
   );
-  const tax = totalPrice * taxRate;
-  const grandTotal = totalPrice + tax;
-  const selectedItems = products.reduce(
-    (acc, product) => acc + product.quantity,
-    0
-  );
+  const discountAmount = (totalPrice * discount) / 100;
+  const tax = (totalPrice - discountAmount) * taxRate;
+  const grandTotal = totalPrice - discountAmount + tax;
+
+  const handleApplyDiscount = (discountPercentage) => {
+    setDiscount(discountPercentage);
+  };
 
   const handleClearCart = () => {
     dispatch(clearCart());
@@ -41,21 +46,18 @@ const OrderSummary = () => {
         quantity: product.quantity,
       })),
       amount: grandTotal.toFixed(2),
-      email: user?.email || "guest@example.com", // Use guest email if user is not logged in
+      email: user?.email || "guest@example.com",
       paymentMethod: paymentMethod,
     };
 
     try {
-      const response = await fetch(
-        `http://localhost:4000/api/orders/create-order`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(orderData),
-        }
-      );
+      const response = await fetch(`http://localhost:4000/api/orders/create-order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
 
       const data = await response.json();
       if (response.ok) {
@@ -74,15 +76,10 @@ const OrderSummary = () => {
       <div className="px-6 py-4 space-y-5">
         <h1 className="text-2xl font-bold text-dark">Order Summary</h1>
         <p className="text-dark mt-2">Selected Items: {selectedItems}</p>
-        <p className="text-dark mt-2">
-          Total Price: ₹{totalPrice.toFixed(2)}
-        </p>
-        <p className="text-dark mt-2">
-          Tax ({(taxRate * 100).toFixed(0)}%): ₹{tax.toFixed(2)}
-        </p>
-        <h3 className="font-semibold text-dark mt-4">
-          Grand Total: ₹{grandTotal.toFixed(2)}
-        </h3>
+        <p className="text-dark mt-2">Total Price: ₹{totalPrice.toFixed(2)}</p>
+        <p>Discount: ₹{discountAmount.toFixed(2)} ({discount}%)</p>
+        <p className="text-dark mt-2">Tax ({(taxRate * 100).toFixed(0)}%): ₹{tax.toFixed(2)}</p>
+        <h3 className="font-semibold text-dark mt-4">Grand Total: ₹{grandTotal.toFixed(2)}</h3>
       </div>
 
       <div className="px-4 pb-6">
@@ -95,8 +92,11 @@ const OrderSummary = () => {
           <i className="ri-delete-bin-7-line"></i>
         </button>
 
+        {/* Coupon Component */}
+        <Coupon onApplyDiscount={handleApplyDiscount} />
+
         {/* Payment Method Selection */}
-        <h2>Select Payment Method</h2>
+        <h2 className="mt-8">Select Payment Method</h2>
         <button
           onClick={() => setPaymentMethod("COD")}
           className="bg-blue-500 px-3 py-1.5 text-white mt-2 rounded-md mr-2"
@@ -119,9 +119,9 @@ const OrderSummary = () => {
                 upiId
               )}&pn=${encodeURIComponent(
                 upiName
-              )}&am=${grandTotal.toFixed(
-                2
-              )}&cu=INR&tn=${encodeURIComponent("Order Payment")}`}
+              )}&am=${grandTotal.toFixed(2)}&cu=INR&tn=${encodeURIComponent(
+                "Order Payment"
+              )}`}
               size={200}
             />
             <p className="mt-2">UPI ID: {upiId}</p>

@@ -14,6 +14,24 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.post("/uploadImage", async (req, res) => {
+  try {
+    const { image } = req.body; // Expecting a base64 encoded image
+    if (!image) {
+      return res.status(400).json({ message: "No image provided" });
+    }
+
+    const imageUrl = await uploadImage(image); // Upload to Cloudinary
+    res.status(200).json(imageUrl); // Respond with the secure URL
+  } catch (error) {
+    console.error("Error uploading image:", error.message);
+    res.status(500).json({ message: "Failed to upload image" });
+  }
+});
+
+
+
+
 // Update deal
 router.put("/", async (req, res) => {
   try {
