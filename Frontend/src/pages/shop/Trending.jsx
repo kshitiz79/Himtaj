@@ -1,4 +1,4 @@
-// src/components/Trending.js
+
 import { useState } from "react";
 import { useFetchTrendingProductsQuery } from "../../redux/features/products/productsApi";
 import ProductCards from "./ProductCards";

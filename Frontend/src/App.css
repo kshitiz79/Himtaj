@@ -37,9 +37,8 @@
 .section__container3 {
   max-width: var(--max-width-1600);
   margin: auto;
- 
-}
 
+}
 
 
 .section__header {
@@ -152,16 +151,7 @@ nav {
   gap: 2rem;
   align-items: center;
 }
-.header2__container {
-  min-height: 650px;
 
-  border-bottom-left-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  align-items: center;
-}
 
 .header__content {
   max-width: 600px;
@@ -181,7 +171,7 @@ nav {
   color: var(--text-dark);
 }
 
-header__content2 {
+.header__content2 {
   max-width: 600px;
   margin-left: auto;
 }
@@ -221,44 +211,57 @@ header__content2 {
   max-width: 500px;
 }
 
-.categories__grid {
-  max-width: var(--max-width-1200);
-  margin: auto;
-  margin-top: 4rem;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 2rem;
+
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
-.categories__card {
-  text-align: center;
-  transition: transform 0.9s, box-shadow 0.9s;
- 
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 
 
-.categories__card img {
-  max-width: 100px;
-  margin: auto;
-  margin-bottom: 1rem;
-  border: 5px solid var(--primary-color-light);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s, transform 0.3s;
-}
-
-.categories__card img:hover {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  transform: scale(1.1);
-}
 
 
-.categories__card h4 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  font-family: var(--header-font);
-  color: var(--text-dark);
+@media (max-width: 768px) {
+  .desktop-view {
+    display: none; /* Hide desktop view on mobile */
+  }
+
+  .mobile-view {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scroll-snap-type: x mandatory; /* Add snapping effect */
+    padding: 1rem 0;
+  }
+
+  .categories__card {
+    flex: 0 0 auto; /* Prevent shrinking */
+    scroll-snap-align: start; /* Align items */
+    text-align: center;
+    width: 140px; /* Adjust card size for mobile */
+  }
+
+  .categories__card img {
+    max-width: 100%;
+    margin: auto;
+    margin-bottom: 0.5rem;
+    border: 2px solid var(--primary-color-light);
+    border-radius: 8px;
+  }
+
+  .categories__card h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
 }
+
+
+
 
 
 
@@ -303,6 +306,7 @@ header__content2 {
   width: 100%;
   height: auto;
   object-fit: cover;
+
 }
 
 .product__grid {
@@ -323,8 +327,6 @@ header__content2 {
   font-size: 0.8rem;
   color: goldenrod;
 }
-
-
 
 
 
@@ -351,80 +353,6 @@ header__content2 {
   text-align: center;
 }
 
-.deals__container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.deals__image {
-  width: 100%;
-  height: auto;
-}
-
-.deals__image img {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-}
-
-.deals__content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  opacity: 0.6;
-  background-color: #009999;  
-  color: var(--white);
-  padding: 1.5rem 2rem;
-}
-
-.deals__text {
-  display: flex;
-  text-align: left;
-}
-
-.deals__text h4 {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.deals__text p {
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.deals__countdown {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.deals__countdown__card {
-  width: 70px;
-  height: 70px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--white);
-  border-radius: 1%;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.deals__countdown__card h4 {
-  font-size: 1rem;
-  font-weight: bold;
-  color: var(--text-dark);
-}
-
-.deals__countdown__card p {
-  font-size: 0.75rem;
-  color: var(--text-dark);
-}
 
 
 .banner__container {
@@ -458,7 +386,7 @@ header__content2 {
 }
 
 .blog__container {
-  background-color: var(--extra-light);
+
   border-radius: 1rem;
 }
 
@@ -472,10 +400,10 @@ header__content2 {
 }
 
 .blog__card {
-  background-color: var(--white);
+  background-color: var(--extra-light);
   overflow: hidden;
   border-radius: 10px;
-  box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 20px 60px rgba(0, 0, 0, 6);
 }
 
 .blog__card__content {

@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import  { useEffect, useMemo, useState } from "react";
 
 import { Link, useParams } from "react-router-dom";
 import RatingStar from "../../../components/RatingStar";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { useFetchProductByIdQuery } from "../../../redux/features/products/productsApi";
 import ReviewsCard from "../reviews/ReviewsCard";
 import { useAddItemToCartMutation } from "../../../redux/features/cart/cartApi";

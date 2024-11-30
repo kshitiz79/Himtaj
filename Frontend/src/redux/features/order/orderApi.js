@@ -10,6 +10,17 @@ export const orderApi = createApi({
   }),
   tagTypes: ["Order"],
   endpoints: (builder) => ({
+
+    createOrder: builder.mutation({
+      query: (orderData) => ({
+        url: "/create-order",
+        method: "POST",
+        body: orderData,
+      }),
+    }),
+
+
+
     // Fetch orders by email
     getOrdersByEmail: builder.query({
       query: (email) => ({
@@ -43,6 +54,9 @@ export const orderApi = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
+
+
+    
     deleteOrder: builder.mutation({
       query: (id) => ({
         url: `/delete-order/${id}`,
@@ -58,7 +72,8 @@ export const {
   useGetOrderByIdQuery,
   useGetAllOrdersQuery,
   useUpdateOrderStatusMutation,
-  useDeleteOrderMutation
+  useDeleteOrderMutation,
+  useCreateOrderMutation
 } = orderApi;
 
 export default orderApi;

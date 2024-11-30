@@ -1,25 +1,34 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { clearCart } from "../../redux/features/cart/cartSlice";
+import { useSelector } from "react-redux"; // Import to access logged-in user data
 import { useNavigate } from "react-router-dom";
 import QRCode from "react-qr-code";
 import Coupon from "./Coupon";
+import {
+  useFetchCartQuery,
+  useClearCartMutation,
+} from "../../redux/features/cart/cartApi";
+import { getBaseUrl } from "../../../../Frontend/src/utils/baseURL";
 
-const OrderSummary = () => {
-  const dispatch = useDispatch();
+const OrderSummary = ({ userId }) => { // Pass userId as a prop
   const navigate = useNavigate();
   const [discount, setDiscount] = useState(0);
-
-  // Access user and cart data from Redux
-  const { user } = useSelector((state) => state.auth);
-  const { products = [], taxRate = 0.1 } = useSelector((store) => store.cart);
-
   const [paymentMethod, setPaymentMethod] = useState(null);
 
-  // UPI Payment Details
-  const upiId = "8127520552@ptsbi";
-  const upiName = "Your Name";
+  // Fetch logged-in user details
+  const { user } = useSelector((state) => state.auth); // Replace 'auth' with your slice name
+  const userEmail = user?.email; // Get the logged-in user's email
 
+  // Fetch cart data using RTK Query
+  const { data: products = [], isLoading, isError, refetch } = useFetchCartQuery(userId);
+
+  // Mutation hooks
+  const [clearCart] = useClearCartMutation();
+
+  // UPI Payment Details
+  const upiId = "6306643695@pthdfc"; // Replace with your UPI ID
+  const upiName = "Kshitiz Maurya"; // Replace with your UPI Name
+
+  // Calculate selected items
   const selectedItems = products.reduce((acc, product) => acc + product.quantity, 0);
 
   // Calculate totals
@@ -28,30 +37,48 @@ const OrderSummary = () => {
     0
   );
   const discountAmount = (totalPrice * discount) / 100;
-  const tax = (totalPrice - discountAmount) * taxRate;
+  const tax = (totalPrice - discountAmount) * 0.1; // Assuming taxRate is 10%
   const grandTotal = totalPrice - discountAmount + tax;
 
+  // Apply Discount Handler
   const handleApplyDiscount = (discountPercentage) => {
     setDiscount(discountPercentage);
   };
 
-  const handleClearCart = () => {
-    dispatch(clearCart());
+  // Clear Cart Handler using RTK Query
+  const handleClearCart = async () => {
+    try {
+      await clearCart(userId).unwrap();
+    } catch (error) {
+      console.error("Failed to clear cart:", error);
+      alert("Failed to clear cart. Please try again.");
+    }
   };
 
+  // Place Order Handler
   const handlePlaceOrder = async () => {
+    if (!paymentMethod) {
+      alert("Please select a payment method.");
+      return;
+    }
+
+    if (!userEmail) {
+      alert("You must be logged in to place an order.");
+      return;
+    }
+
     const orderData = {
       products: products.map((product) => ({
         productId: product._id,
         quantity: product.quantity,
       })),
       amount: grandTotal.toFixed(2),
-      email: user?.email || "guest@example.com",
-      paymentMethod: paymentMethod,
+      email: userEmail, // Use the logged-in user's email
+      paymentMethod,
     };
 
     try {
-      const response = await fetch(`http://localhost:4000/api/orders/create-order`, {
+      const response = await fetch(`${getBaseUrl()}/api/orders/create-order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,15 +88,23 @@ const OrderSummary = () => {
 
       const data = await response.json();
       if (response.ok) {
-        dispatch(clearCart());
-        navigate("/success");
+        if (paymentMethod === "COD") {
+          navigate("/thanks"); // Redirect to COD Success Page
+        } else if (paymentMethod === "UPI") {
+          navigate(`/payment-success?session_id=${data.order._id}`); // Redirect to Payment Success Page
+        }
       } else {
         console.error("Error:", data.error);
+        alert("Failed to place the order. Please try again.");
       }
     } catch (error) {
       console.error("Error placing order:", error);
+      alert("An error occurred while placing the order.");
     }
   };
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading cart data.</p>;
 
   return (
     <div className="bg-primary-light mt-5 rounded text-base">
@@ -78,7 +113,7 @@ const OrderSummary = () => {
         <p className="text-dark mt-2">Selected Items: {selectedItems}</p>
         <p className="text-dark mt-2">Total Price: ₹{totalPrice.toFixed(2)}</p>
         <p>Discount: ₹{discountAmount.toFixed(2)} ({discount}%)</p>
-        <p className="text-dark mt-2">Tax ({(taxRate * 100).toFixed(0)}%): ₹{tax.toFixed(2)}</p>
+        <p className="text-dark mt-2">Tax (10%): ₹{tax.toFixed(2)}</p>
         <h3 className="font-semibold text-dark mt-4">Grand Total: ₹{grandTotal.toFixed(2)}</h3>
       </div>
 
@@ -99,13 +134,17 @@ const OrderSummary = () => {
         <h2 className="mt-8">Select Payment Method</h2>
         <button
           onClick={() => setPaymentMethod("COD")}
-          className="bg-blue-500 px-3 py-1.5 text-white mt-2 rounded-md mr-2"
+          className={`bg-blue-500 px-3 py-1.5 text-white mt-2 rounded-md mr-2 ${
+            paymentMethod === "COD" ? "opacity-75 cursor-not-allowed" : ""
+          }`}
         >
           Cash on Delivery (COD)
         </button>
         <button
           onClick={() => setPaymentMethod("UPI")}
-          className="bg-green-500 px-3 py-1.5 text-white mt-2 rounded-md"
+          className={`bg-green-500 px-3 py-1.5 text-white mt-2 rounded-md ${
+            paymentMethod === "UPI" ? "opacity-75 cursor-not-allowed" : ""
+          }`}
         >
           UPI Payment
         </button>

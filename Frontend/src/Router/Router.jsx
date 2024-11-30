@@ -23,6 +23,11 @@ import Gifts from "../pages/Gifts/Gifts";
 import Collection from "../pages/Collection/Collection";
 import Thanks from "../pages/Thanks/Thanks";
 import AddCoupon from "../dashboard/admin/AddCoupon/AddCoupon";
+import CODSuccess from "../components/CodSucess";
+import PaymentSuccess from "../components/PaymentSucess";
+import UserOrders from "../dashboard/user/UserOrders";
+import ManageOrders from "../dashboard/admin/ManageOrders/ManageOrder";
+
 
 
 
@@ -67,13 +72,26 @@ const router = createBrowserRouter([
        {
         path:"/thanks", element:<Thanks />
        },
+
+
+       {
+        path:"/payment-success", element:<PaymentSuccess />
+       },
+       {
+        path:"/cod-success", element:<CODSuccess />
+       },
+
+
+
+
       {
         path:"/dashboard",
         element:<DashboardLayout/>,
         children:[
 
           { path: '', element: <UserDMain/>},
-          { path: 'orders', element: <OrderDetails/>},
+          { path: 'orders', element: <UserOrders/>},
+          { path: "orders/:orderId", element: <OrderDetails /> }, 
           { path: 'payments', element: <div>User Payments</div>},
           { path: 'profile', element: <div><UserProfile/></div>},
           { path: 'reviews', element: <UserReviews/>},
@@ -90,7 +108,7 @@ const router = createBrowserRouter([
 
           { path: 'users', element: <PrivateRoute><ManageUser/></PrivateRoute>},
 
-          { path: 'manage-orders', element: <PrivateRoute>Admin Main</PrivateRoute>},
+          { path: 'manage-orders', element: <PrivateRoute><ManageOrders/></PrivateRoute>},
 
           
           { path: 'deals-banners', element: <PrivateRoute><Deals/></PrivateRoute>},

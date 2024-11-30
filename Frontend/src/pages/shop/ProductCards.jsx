@@ -33,9 +33,9 @@ const ProductCards = ({ products }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
       {products.map((product) => (
-        <div key={product._id} className="product__card">
+        <div key={product._id}>
           <div className="relative">
             <Link to={`/shop/${product._id}`}>
               <img
@@ -64,11 +64,12 @@ const ProductCards = ({ products }) => {
             </button>
           </div>
           <div className="product__card__content">
-          <p>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl">
               Rs {product.price} {product.oldPrice && <s>${product.oldPrice}</s>}
             </p>
-            <h4>{product.name}</h4>
-           
+            <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl">
+              {product.name}
+            </h4>
             <RatingStar rating={product.rating} />
           </div>
         </div>

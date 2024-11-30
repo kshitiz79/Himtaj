@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import CommentorIcon from "../../../assets/avatar.png";
-import { formatDate } from '../../../utils/dataFormer';
-import PostAReview from './PostAReview';
-import RatingStars from '../../../components/RatingStar';
+import { formatDate } from "../../../utils/dataFormer";
+import PostAReview from "./PostAReview";
+import RatingStars from "../../../components/RatingStar";
 
 const ReviewsCard = ({ productReviews }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,49 +18,69 @@ const ReviewsCard = ({ productReviews }) => {
     const reviews = productReviews || [];
 
     return (
-        <div className="my-6 bg-white p-8">
-       
+        <div className="bg-white p-8 rounded-lg my-6">
+            {/* Header */}
+            <h3 className="text-2xl font-semibold mb-4">Customer Reviews</h3>
+
+            {/* Reviews */}
             <div>
                 {reviews.length > 0 ? (
-                    <div>
-                        <h3 className="text-2xl font-medium">Customer Reviews</h3>
-                        <div>
-                            {reviews.map((review, index) => (
-                                <div key={index} className="mt-4">
-                                    <div className="flex gap-4 items-center">
-                                        <img src={CommentorIcon} alt="" className="h-14 w-14" />
-                                        <div className="space-y-1">
-                                            <p className="text-lg font-medium underline capitalize underline-offset-4 text-blue-400">
-                                                {review.userId.username}
-                                            </p>
-                                            <p className="text-[12px] italic">
-                                                {formatDate(review.createdAt)}
-                                            </p>
-                                            <RatingStars rating={review.rating}/>
-                                        </div>
-                                    </div>
-
-                                    {/* Comment details */}
-                                    <div className="text-gray-600 mt-5 border p-8">
-                                        <p className="md:w-4/5">{review?.comment}</p>
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 h-52">
+                        {reviews.map((review, index) => (
+                            <div
+                                key={index}
+                                className="border rounded-lg p-6 shadow-sm bg-primary-light-light relative"
+                            >
+                                {/* Reviewer Info */}
+                                <div className="flex items-center mb-4">
+                                    <img
+                                        src={CommentorIcon}
+                                        alt="Reviewer"
+                                        className="h-12 w-12 rounded-full mr-4"
+                                    />
+                                    <div>
+                                        <p className="text-lg font-medium text-gray-800">
+                                            {review.userId.username}
+                                        </p>
+                                        <p className="text-sm text-gray-500">
+                                            {formatDate(review.createdAt)}
+                                        </p>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+
+                                {/* Rating */}
+                                <div className="flex items-center mb-4">
+                                    <RatingStars rating={review.rating} />
+                                </div>
+
+                                {/* Comment */}
+                                <p className="text-gray-700 text-sm leading-relaxed">
+                                    {review.comment}
+                                </p>
+
+                                {/* Google Icon (if needed) */}
+                                <div className="absolute top-4 right-4">
+                                    <img
+                                        src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                                        alt="Google Logo"
+                                        className="h-6 w-6"
+                                    />
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 ) : (
-
-                    <p>No reviews yet.</p>
+                    <p className="text-gray-500">No reviews yet.</p>
                 )}
             </div>
 
-            {/* Add comment section */}
-            <div className='mt-12'>
+            {/* Add Comment Button */}
+            <div className="mt-8 flex justify-center">
                 <button
                     onClick={handleOpenReviewModal}
-                    className="px-6 py-3 bg-primary text-white rounded-md flex items-center gap-2"
+                    className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-500 transition flex items-center"
                 >
-                    <i className="ri-pencil-line mr-2"></i> Add A Comment
+                    <i className="ri-pencil-line mr-2"></i> Write a Review
                 </button>
             </div>
 

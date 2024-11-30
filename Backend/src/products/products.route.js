@@ -5,6 +5,10 @@ const verifyToken = require("../middleware/verifyToken");
 const verifyAdmin = require("../middleware/verifyAdmin");
 const router = express.Router();
 
+
+
+
+
 router.post("/create-product", async (req, res) => {
   try {
     const { name } = req.body;
@@ -37,6 +41,8 @@ router.post("/create-product", async (req, res) => {
 
 
 
+
+
 router.get("/search", async (req, res) => {
   const { query } = req.query;
 
@@ -55,6 +61,8 @@ router.get("/search", async (req, res) => {
     res.status(500).json({ message: "Error searching products" });
   }
 });
+
+
 
 
 

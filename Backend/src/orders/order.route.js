@@ -8,6 +8,10 @@ const router = express.Router();
 router.post("/create-order", async (req, res) => {
   const { products, amount, email, paymentMethod } = req.body;
 
+  if (!products || !amount || !email || !paymentMethod) {
+    return res.status(400).json({ success: false, message: "All fields are required" });
+  }
+
   try {
     const newOrder = new Order({
       products,
@@ -18,25 +22,32 @@ router.post("/create-order", async (req, res) => {
     });
 
     await newOrder.save();
-    res
-      .status(201)
-      .json({ message: "Order placed successfully", order: newOrder });
+
+    res.status(201).json({
+      success: true,
+      message: "Order placed successfully",
+      order: newOrder,
+      sessionId: paymentMethod === "UPI" ? newOrder._id : null,
+    });
   } catch (error) {
-    console.error("Error creating order:", error);
-    res.status(500).json({ error: "Failed to create order" });
+    console.error("Error creating order:", error.message); // Log specific error
+    res.status(500).json({ success: false, message: "Failed to create order" });
   }
 });
 
+
 // Update Order Status
+const validStatuses = ["pending", "processing", "completed"];
+
 router.patch("/update-order-status/:id", async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!status || !validStatuses.includes(status)) {
+    return res.status(400).json({ message: "Invalid or missing status" });
+  }
+
   try {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    if (!status) {
-      return res.status(400).json({ message: "Order status is required" });
-    }
-
     const updatedOrder = await Order.findByIdAndUpdate(
       id,
       { status, updatedAt: Date.now() },
@@ -52,10 +63,12 @@ router.patch("/update-order-status/:id", async (req, res) => {
       order: updatedOrder,
     });
   } catch (error) {
-    console.error("Error updating order status:", error);
+    console.error("Error updating order status:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
 
 // Get Orders by Email
 router.get("/:email", async (req, res) => {
@@ -66,32 +79,40 @@ router.get("/:email", async (req, res) => {
   }
 
   try {
-    const orders = await Order.find({ email: email }).sort({ createdAt: -1 });
-    if (!orders || orders.length === 0) {
-      return res
-        .status(404)
-        .json({ order: 0, message: "No orders found for this email" });
-    }
-    res.json(orders);
+    const orders = await Order.find({ email }).sort({ createdAt: -1 });
+
+    res.status(200).json(orders || []);
   } catch (error) {
-    console.error("Error fetching orders:", error);
+    console.error("Error fetching orders:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 });
 
+
+
 // Get Order by ID
 router.get("/order/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid order ID" });
+  }
+
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findById(id);
+
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+
     res.status(200).json(order);
   } catch (error) {
-    console.error("Error fetching order:", error);
+    console.error("Error fetching order:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
 
 // Get All Orders (Admin)
 router.get("/", async (req, res) => {
@@ -108,6 +129,12 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
+
+
+
+
 
 // Delete Order
 router.delete("/delete-order/:id", async (req, res) => {

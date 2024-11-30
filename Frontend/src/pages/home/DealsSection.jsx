@@ -2,17 +2,16 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const DealsSection = () => {
-  const BASE_URL = "http://localhost:4000"; 
-  
+  const BASE_URL = "http://localhost:4000";
+
   const [deal, setDeal] = useState({
     title: "",
     description: "",
     discount: 0,
     imageUrl: "",
-    endDate: ""
+    endDate: "",
   });
   const [countdown, setCountdown] = useState({});
-  const [isEditing, setIsEditing] = useState(false);
   const [intervalId, setIntervalId] = useState(null);
 
   useEffect(() => {
@@ -52,78 +51,51 @@ const DealsSection = () => {
     setIntervalId(id);
   };
 
-  const handleEdit = () => setIsEditing(true);
-
-  const handleSave = async () => {
-    try {
-      await axios.put(`${BASE_URL}/api/deal`, deal);
-      setIsEditing(false);
-      startCountdown(deal.endDate);
-    } catch (error) {
-      console.error("Error updating deal:", error);
-    }
-  };
-
-  const handleImageUpload = async (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = async () => {
-      try {
-        const response = await axios.post(`${BASE_URL}/api/uploadImage`, {
-          image: reader.result,
-        });
-        setDeal({ ...deal, imageUrl: response.data });
-      } catch (error) {
-        console.error("Image upload failed:", error);
-      }
-    };
-  };
-
   return (
-<section className="deals__container">
-  {/* Image Section */}
-  <div className="deals__image">
-    {deal.imageUrl ? (
-      <img src={deal.imageUrl} alt="Deal Banner" />
-    ) : (
-      <p>No image available</p>
-    )}
-  </div>
-
-  {/* Content Section */}
-  <div className="deals__content">
-    {/* Left-aligned text */}
-    <div className="deals__text">
-      <h4> {deal.title}</h4>
-   
-    </div>
-
-    {/* Right-aligned countdown */}
-    <div className="deals__countdown">
-      <div className="deals__countdown__card">
-        <h4>{countdown.days || "0"}</h4>
-        <p>Days</p>
+    <section className="max-w-[1600px] mx-auto px-4 py-8 md:px-8 md:py-16">
+      {/* Image Section */}
+      <div className="w-full h-auto  ">
+        {deal.imageUrl ? (
+          <img
+            src={deal.imageUrl}
+            alt="Deal Banner"
+            className="w-full h-auto  mx-auto  shadow-md object-cover"
+          />
+        ) : (
+          <p className="text-center text-gray-500">No image available</p>
+        )}
       </div>
-      <div className="deals__countdown__card">
-        <h4>{countdown.hours || "0"}</h4>
-        <p>Hours</p>
-      </div>
-      <div className="deals__countdown__card">
-        <h4>{countdown.minutes || "0"}</h4>
-        <p>Minutes</p>
-      </div>
-      <div className="deals__countdown__card">
-        <h4>{countdown.seconds || "0"}</h4>
-        <p>Seconds</p>
-      </div>
-    </div>
-  </div>
-</section>
 
+      {/* Content Section */}
+      <div className="flex flex-col md:flex-row justify-between items-center bg-teal-600 bg-opacity-60 text-white p-6 md:p-10  shadow-lg">
+        {/* Text Section */}
+        <div className="text-center md:text-left flex flex-col md:w-1/2">
+          <h4 className="text-2xl md:text-4xl font-bold mb-4">{deal.title}</h4>
+          <p className="text-sm md:text-base">{deal.description}</p>
+        </div>
 
-  
+        {/* Countdown Section */}
+        <div className="grid grid-cols-4 gap-4 mt-6 md:mt-0 md:w-auto">
+          <div className="flex flex-col items-center justify-center bg-white text-teal-700 p-4 md:p-6 rounded-lg shadow-md">
+            <h4 className="text-lg md:text-2xl font-bold">{countdown.days || "0"}</h4>
+            <p className="text-xs md:text-sm">Days</p>
+          </div>
+          <div className="flex flex-col items-center justify-center bg-white text-teal-700 p-4 md:p-6 rounded-lg shadow-md">
+            <h4 className="text-lg md:text-2xl font-bold">{countdown.hours || "0"}</h4>
+            <p className="text-xs md:text-sm">Hours</p>
+          </div>
+          <div className="flex flex-col items-center justify-center bg-white text-teal-700 p-4 md:p-6 rounded-lg shadow-md">
+            <h4 className="text-lg md:text-2xl font-bold">{countdown.minutes || "0"}</h4>
+            <p className="text-xs md:text-sm">Minutes</p>
+          </div>
+          <div className="flex flex-col items-center justify-center bg-white text-teal-700 p-4 md:p-6 rounded-lg shadow-md">
+            <h4 className="text-lg md:text-2xl font-bold">{countdown.seconds || "0"}</h4>
+            <p className="text-xs md:text-sm">Seconds</p>
+          </div>
+        </div>
+      </div>
+    </section>
   );
-  
 };
 
 export default DealsSection;

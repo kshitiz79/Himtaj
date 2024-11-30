@@ -18,7 +18,7 @@ export default {
 'text-dark': '#0f172a', // Dark text color remains the same
 'text-light': '#64748b', // Light text color remains the same
 'extra-light': '#faf3dd', // Very light gold tone
-
+'primary-light-light': '#B3E3DF',
       }
       
     },

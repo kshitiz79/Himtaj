@@ -1,3 +1,4 @@
+// redux/features/cart/cartApi.js
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getBaseUrl } from "../../../utils/baseURL";
 
@@ -19,9 +20,8 @@ export const cartApi = createApi({
         method: "POST",
         body: item,
       }),
-      invalidatesTags: ["Cart"], // This will trigger the cart to refetch
+      invalidatesTags: ["Cart"],
     }),
-    
     updateCartItem: builder.mutation({
       query: ({ id, type }) => ({
         url: `/update/${id}`,
@@ -50,7 +50,7 @@ export const cartApi = createApi({
 export const {
   useFetchCartQuery,
   useAddItemToCartMutation,
-  useUpdateCartItemMutation, // Ensure this is exported
+  useUpdateCartItemMutation,
   useRemoveItemFromCartMutation,
   useClearCartMutation,
 } = cartApi;

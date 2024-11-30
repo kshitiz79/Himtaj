@@ -16,7 +16,7 @@ const Home = () => {
     <Categories/>
     <Hero/>
     <Trending/>
-    <DealsSection/>
+ <DealsSection/>
     <PromoBanner/>
     <Blogs/>
 

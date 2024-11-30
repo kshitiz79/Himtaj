@@ -1,4 +1,4 @@
-// components/CartModal.jsx
+
 import React from "react";
 import OrderSummary from "./OrderSummary";
 import {
@@ -9,8 +9,7 @@ import {
 import { getBaseUrl } from "../../../../Frontend/src/utils/baseURL";
 
 const CartModal = ({ isOpen, onClose, userId }) => {
-
-  const { data: products = [], isLoading } = useFetchCartQuery(userId);
+  const { data: products = [], isLoading, isError, refetch } = useFetchCartQuery(userId);
 
   const [removeItemFromCart] = useRemoveItemFromCartMutation();
   const [updateCartItem] = useUpdateCartItemMutation();
@@ -23,6 +22,9 @@ const CartModal = ({ isOpen, onClose, userId }) => {
     e.preventDefault();
     await removeItemFromCart(id);
   };
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading cart.</p>;
 
   return (
     <div
@@ -46,9 +48,7 @@ const CartModal = ({ isOpen, onClose, userId }) => {
               <i className="ri-xrp-fill bg-black p-1 text-white"></i>
             </button>
           </div>
-          {isLoading ? (
-            <p>Loading...</p>
-          ) : products.length === 0 ? (
+          {products.length === 0 ? (
             <p>Your cart is empty.</p>
           ) : (
             products.map((item) => (
@@ -81,8 +81,7 @@ const CartModal = ({ isOpen, onClose, userId }) => {
               </div>
             ))
           )}
-        {products.length > 0 && <OrderSummary products={products} />}
-
+          {products.length > 0 && <OrderSummary userId={userId} />}
         </div>
       </div>
     </div>

@@ -1,31 +1,20 @@
-// orders.model.js
-
 const mongoose = require("mongoose");
 
-const OrderSchema = new mongoose.Schema(
-  {
-    orderId: String, // Optional: You can auto-generate or use _id
-    products: [
-      {
-        productId: { type: String, required: true },
-        quantity: { type: Number, required: true },
-      },
-    ],
-    amount: Number,
-    email: { type: String, required: true },
-    paymentMethod: {
-      type: String,
-      enum: ["UPI", "COD"],
-      required: true,
+const orderSchema = new mongoose.Schema({
+  products: [
+    {
+      productId: { type: mongoose.Schema.Types.ObjectId, required: true },
+      quantity: { type: Number, required: true, min: 1 },
     },
-    status: {
-      type: String,
-      enum: ["pending", "processing", "completed"],
-      default: "pending",
-    },
+  ],
+  amount: { type: Number, required: true },
+  email: { type: String, required: true },
+  paymentMethod: { type: String, enum: ["COD", "UPI"], required: true },
+  status: {
+    type: String,
+    enum: ["pending", "processing", "shipped", "completed"],
+    default: "pending",
   },
-  { timestamps: true }
-);
+}, { timestamps: true });
 
-const Order = mongoose.model("Order", OrderSchema);
-module.exports = Order;
+module.exports = mongoose.model("Order", orderSchema);
