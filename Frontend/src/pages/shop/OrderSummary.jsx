@@ -166,7 +166,7 @@ const OrderSummary = ({ userId }) => { // Pass userId as a prop
             <p className="mt-2">UPI ID: {upiId}</p>
             <p>Total Amount: ₹{grandTotal.toFixed(2)}</p>
             <button
-              onClick={handlePlaceOrder}
+             
               className="bg-green-600 px-3 py-1.5 text-white mt-4 rounded-md"
             >
               I Have Paid

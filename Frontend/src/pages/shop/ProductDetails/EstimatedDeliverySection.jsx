@@ -5,12 +5,17 @@ const EstimatedDeliverySection = () => {
   const [deliveryMessage, setDeliveryMessage] = useState("Check delivery date for your area.");
 
   const handleCheckDelivery = () => {
-    // Logic to check delivery based on the pin code
-    // For now, we'll just simulate a delivery message
-    if (pinCode === "201018") {
-      setDeliveryMessage("Free Delivery by Thursday, 7th November. Order within 2 hours 47 minutes.");
+    if (/^\d{6}$/.test(pinCode)) {
+      const deliveryDays = Math.floor(Math.random() * 4) + 7; // Random number between 7 and 10
+      const deliveryDate = new Date();
+      deliveryDate.setDate(deliveryDate.getDate() + deliveryDays);
+
+      const options = { weekday: "long", month: "long", day: "numeric" };
+      const formattedDate = deliveryDate.toLocaleDateString("en-US", options);
+
+      setDeliveryMessage(`Delivery by ${formattedDate}.`);
     } else {
-      setDeliveryMessage("Delivery is not available in your area.");
+      setDeliveryMessage("Please enter a valid 6-digit PIN code.");
     }
   };
 
