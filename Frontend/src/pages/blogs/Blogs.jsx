@@ -1,9 +1,9 @@
 import blogData from "../../data/blogs.json";
 
 export const Blogs = () => {
-  const pin = "/pin.webp"; // Reference directly from public folder
+  const pin = "/pin.webp"; 
   
-  const getRandomRotation = () => Math.random() * 15 - 5; // Random rotation between -5 and 5
+  const getRandomRotation = () => Math.random() * 15 - 5; 
 
   return (
     <section className="section__container blog__container px-4 py-8">

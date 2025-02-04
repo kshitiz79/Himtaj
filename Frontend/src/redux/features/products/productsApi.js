@@ -10,20 +10,35 @@ export const productsApi = createApi({
   tagTypes: ["Products"],
   endpoints: (builder) => ({
     fetchAllProducts: builder.query({
-      query: ({ category, color, minPrice, maxPrice, page = 1, limit = 10 }) => {
+      query: ({
+        category,
+        color,
+        minPrice,
+        maxPrice,
+        page = 1,
+        limit = 10,
+        // Add these fields if your server supports them
+        gender,
+        sortBy = "createdAt",
+        sortOrder = "desc",
+      }) => {
         const queryParams = new URLSearchParams({
-          ...(category && { category }),
-          ...(color && { color }),
-          ...(minPrice && { minPrice: minPrice.toString() }),
-          ...(maxPrice && { maxPrice: maxPrice.toString() }),
+          ...(gender ? { gender } : {}), // Only include gender if defined
+          ...(category ? { category } : {}),
+          ...(color ? { color } : {}),
+          ...(minPrice !== undefined ? { minPrice: minPrice.toString() } : {}),
+          ...(maxPrice !== undefined ? { maxPrice: maxPrice.toString() } : {}),
           page: page.toString(),
           limit: limit.toString(),
+          sortBy,        // e.g., "price", "createdAt", etc.
+          sortOrder,     // e.g., "asc" or "desc"
         }).toString();
-
+    
         return `/?${queryParams}`;
       },
       providesTags: ["Products"],
     }),
+    
 
     fetchProductById: builder.query({
       query: (id) => `/${id}`,
@@ -34,6 +49,10 @@ export const productsApi = createApi({
       query: () => `/trending`,
       providesTags: ["Products"],
     }),
+
+  
+
+
 
     addProduct: builder.mutation({
       query: (newProduct) => ({
@@ -58,8 +77,6 @@ export const productsApi = createApi({
       invalidatesTags: ["Products"],
     }),
 
-    
-
     deleteProduct: builder.mutation({
       query: (id) => ({
         url: `/${id}`,
@@ -68,7 +85,6 @@ export const productsApi = createApi({
       invalidatesTags: (result, error, id) => [{ type: "Products", id }],
     }),
 
-    // New endpoint for searching products
     searchProducts: builder.query({
       query: (searchTerm) => ({
         url: `/search`,
@@ -83,11 +99,12 @@ export const {
   useFetchAllProductsQuery,
   useFetchProductByIdQuery,
   useFetchTrendingProductsQuery,
+
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
   useFetchRelatedBlogsQuery,
-  useSearchProductsQuery, // Export the new search query
+  useSearchProductsQuery,
 } = productsApi;
 
 export default productsApi;

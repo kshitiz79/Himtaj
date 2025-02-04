@@ -59,13 +59,7 @@ const ReviewsCard = ({ productReviews }) => {
                                 </p>
 
                                 {/* Google Icon (if needed) */}
-                                <div className="absolute top-4 right-4">
-                                    <img
-                                        src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                                        alt="Google Logo"
-                                        className="h-6 w-6"
-                                    />
-                                </div>
+                               
                             </div>
                         ))}
                     </div>

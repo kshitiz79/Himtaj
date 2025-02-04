@@ -27,6 +27,14 @@ import CODSuccess from "../components/CodSucess";
 import PaymentSuccess from "../components/PaymentSucess";
 import UserOrders from "../dashboard/user/UserOrders";
 import ManageOrders from "../dashboard/admin/ManageOrders/ManageOrder";
+import GenderPage from "../pages/category/GenderCategory";
+import DeliveryInformation from "../pages/footer/DeliveryInformation";
+import CancellationPolicy from "../pages/footer/CancellationPolicy";
+import LegalPolicy from "../pages/footer/LegalPolicies";
+import ContactUs from "../pages/footer/ContactUs";
+import HelpFAQ from "../pages/footer/Help";
+import ReturnExchange from "../pages/footer/ReturnAndExchange";
+import GenderCategoryPage from "../pages/category/GenderCategorypage";
 
 
 
@@ -64,6 +72,18 @@ const router = createBrowserRouter([
       },
 
       {
+        path:"/gender/:gender", element:<GenderPage/>
+       },
+
+       {
+        path:"/gender/:gender/category/:categoryName",
+         element:<GenderCategoryPage/>
+       },
+
+
+
+
+      {
         path:"/collection", element:<Collection/>
        },
        {
@@ -82,42 +102,77 @@ const router = createBrowserRouter([
        },
 
 
+       {
+        path:"/delivery-information", element:<DeliveryInformation />
+       },
 
 
-      {
-        path:"/dashboard",
-        element:<DashboardLayout/>,
-        children:[
-
-          { path: '', element: <UserDMain/>},
-          { path: 'orders', element: <UserOrders/>},
-          { path: "orders/:orderId", element: <OrderDetails /> }, 
-          { path: 'payments', element: <div>User Payments</div>},
-          { path: 'profile', element: <div><UserProfile/></div>},
-          { path: 'reviews', element: <UserReviews/>},
+       {
+        path:"/cancellation-policy", element:<CancellationPolicy />
+       },
 
 
+       {
+        path:"/legal-policy", element:<LegalPolicy />
+       },
 
-          { path: 'admin', element: <PrivateRoute><AdminDMain/> </PrivateRoute>},
+       {
+        path:"/contact-us", element:<ContactUs />
+       },
+       {
+        path:"/help", element:<HelpFAQ />
+       },
+       {
+        path:"/return-exchange", element:<ReturnExchange />
+       },
 
-          { path: 'add-new-post', element: <PrivateRoute><AddProduct/></PrivateRoute>},
-
-          { path: 'manage-products', element: <PrivateRoute><ManageProducts/></PrivateRoute>},
-
-          { path: 'update-product/:id', element: <PrivateRoute><UpdateProduct/></PrivateRoute>},
-
-          { path: 'users', element: <PrivateRoute><ManageUser/></PrivateRoute>},
-
-          { path: 'manage-orders', element: <PrivateRoute><ManageOrders/></PrivateRoute>},
-
-          
-          { path: 'deals-banners', element: <PrivateRoute><Deals/></PrivateRoute>},
-
-
-          { path: 'add-coupon', element: <PrivateRoute><AddCoupon/></PrivateRoute>},
-
+       {
+        path: "/dashboard",
+        element: <DashboardLayout />,
+        children: [
+          { path: '', element: <UserDMain /> },
+          { path: 'orders', element: <UserOrders /> },
+          { path: "orders/:orderId", element: <OrderDetails /> },
+          { path: 'payments', element: <div>User Payments</div> },
+          { path: 'profile', element: <div><UserProfile /></div> },
+          { path: 'reviews', element: <UserReviews /> },
+      
+          // Admin Routes with Role Restriction
+          { 
+            path: 'admin', 
+            element: <PrivateRoute requiredRole="admin"><AdminDMain /></PrivateRoute> 
+          },
+          { 
+            path: 'add-new-post', 
+            element: <PrivateRoute requiredRole="admin"><AddProduct /></PrivateRoute> 
+          },
+          { 
+            path: 'manage-products', 
+            element: <PrivateRoute requiredRole="admin"><ManageProducts /></PrivateRoute> 
+          },
+          { 
+            path: 'update-product/:id', 
+            element: <PrivateRoute requiredRole="admin"><UpdateProduct /></PrivateRoute> 
+          },
+          { 
+            path: 'users', 
+            element: <PrivateRoute requiredRole="admin"><ManageUser /></PrivateRoute> 
+          },
+          { 
+            path: 'manage-orders', 
+            element: <PrivateRoute requiredRole="admin"><ManageOrders /></PrivateRoute> 
+          },
+          { 
+            path: 'deals-banners', 
+            element: <PrivateRoute requiredRole="admin"><Deals /></PrivateRoute> 
+          },
+          { 
+            path: 'add-coupon', 
+            element: <PrivateRoute requiredRole="admin"><AddCoupon /></PrivateRoute> 
+          },
         ]
       }
+      
     ] 
   },
 

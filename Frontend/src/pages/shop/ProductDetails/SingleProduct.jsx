@@ -8,7 +8,7 @@ import ReviewsCard from "../reviews/ReviewsCard";
 import { useAddItemToCartMutation } from "../../../redux/features/cart/cartApi";
 import EstimatedDeliverySection from "./EstimatedDeliverySection";
 import RecommendedProducts from "./Recommendtaion/RecommendedProducts";
-
+import colorOptions from "./../../../utils/coloroption";
 
 
 
@@ -50,6 +50,15 @@ const SingleProduct = ({ refetchCart }) => {
 
     fetchRecommendedProducts();
   }, []);
+  useEffect(() => {
+    console.log("Fetched Product Data:", data);
+  }, [data]);
+
+  useEffect(() => {
+    console.log("Single Product Data:", singleProduct);
+  }, [singleProduct]);
+  
+
 
 
   const handleAddToCart = async () => {
@@ -62,6 +71,11 @@ const SingleProduct = ({ refetchCart }) => {
       metal:singleProduct.metal,
       userId,
     };
+
+
+ 
+    
+
 
     try {
       const response = await addItemToCart(product).unwrap();
@@ -78,7 +92,7 @@ const SingleProduct = ({ refetchCart }) => {
   if (error) return <p>Error loading product. Please try again later.</p>;
 
 
-
+  const productColors = singleProduct.colors || [];
   const toggleDescription = () => {
     setDescriptionOpen(prevState => !prevState);
   };
@@ -197,17 +211,45 @@ const SingleProduct = ({ refetchCart }) => {
 
 
 
-          <div className="mt-4 space-y-2 ">
-          <p><strong>Metal</strong> {singleProduct.metal }</p>
-            <p><strong>Color:</strong> {singleProduct.color}</p>
-            
+        <div className="mt-4 space-y-2">
+  <p><strong>Metal:</strong> {singleProduct.metal}</p>
 
-            {singleProduct.size && <p><strong>Available Size:</strong> {singleProduct.size}</p>}
-            <p ><strong>Category:</strong> {singleProduct.category}</p>
-            <div className="flex items-center gap-1">
-              <strong>Rating:</strong> <RatingStar rating={singleProduct.rating} />
-            </div>
-          </div>
+  {/* Display Multiple Colors */}
+  {/* Display Multiple Colors */}
+{/* Colors Section */}
+<div className="mt-4 flex gap-2">
+  <h4 className="text-lg font-semibold">Available Colors:</h4>
+  <div className="flex gap-2">
+    {productColors.map((color, index) => (
+      <div key={index} className="flex items-center gap-1">
+        <div
+          style={{
+            backgroundColor: color.code,
+            width: "20px",
+            height: "20px",
+            borderRadius: "50%",
+            border: "1px solid #ccc",
+          }}
+          title={color.value} // Optional: tooltip for the color name
+        />
+      </div>
+    ))}
+  </div>
+</div>
+
+
+
+  {/* Display Size */}
+  {singleProduct.size && <p><strong>Available Size:</strong> {singleProduct.size}</p>}
+
+  {/* Display Category */}
+  <p><strong>Category:</strong> {singleProduct.category}</p>
+
+  {/* Display Rating */}
+  <div className="flex items-center gap-1">
+    <strong>Rating:</strong> <RatingStar rating={singleProduct.rating} />
+  </div>
+</div>
 
           <EstimatedDeliverySection/>
           <button

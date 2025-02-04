@@ -2,13 +2,13 @@ import { Link } from "react-router-dom";
 import category1 from "../../assets/category3.png";
 import category2 from "../../assets/category1.png";
 import category3 from "../../assets/category5.png";
-import category4 from "../../assets/category6.png";
-import category5 from "../../assets/category12.png";
+import category4 from "../../assets/Anklets.webp";
+import category5 from "../../assets/GOLD.png";
 import category6 from "../../assets/category10.png";
 import category7 from "../../assets/category11.png";
 import category8 from "../../assets/category8.png";
 import category9 from "../../assets/category2.png";
-import category10 from "../../assets/category7.png";
+import category10 from "../../assets/FJ.webp";
 import category11 from "../../assets/category4.png";
 import category12 from "../../assets/category9.png";
 

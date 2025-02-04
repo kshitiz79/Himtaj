@@ -85,16 +85,22 @@ router.delete('/clear/:userId', async (req, res) => {
 
 // Get all cart items for a user
 // routes/cart.js
+// Get all cart items for a user
 router.get('/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    const cartItems = await Cart.find({ userId })
-      .populate('productId', 'image'); // Populate productId with image field
 
-    // Map the cart items to include the image field from the product
+    // Validate userId before querying MongoDB
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid or missing userId" });
+    }
+
+    const cartItems = await Cart.find({ userId }).populate('productId', 'image');
+
+    // Ensure that the image is correctly fetched
     const cartItemsWithImage = cartItems.map(item => ({
       ...item.toObject(),
-      image: item.productId.image,
+      image: item.productId?.image || item.image,
     }));
 
     res.status(200).json(cartItemsWithImage);
@@ -103,6 +109,7 @@ router.get('/:userId', async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 module.exports = router;

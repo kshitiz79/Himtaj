@@ -1,4 +1,3 @@
-// redux/features/cart/cartApi.js
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getBaseUrl } from "../../../utils/baseURL";
 
@@ -11,7 +10,13 @@ export const cartApi = createApi({
   tagTypes: ["Cart"],
   endpoints: (builder) => ({
     fetchCart: builder.query({
-      query: (userId) => `/${userId}`,
+      query: (userId) => {
+        if (!userId) {
+          console.error("Missing userId in fetchCart API call");
+          return ""; // Prevents invalid requests
+        }
+        return `/${userId}`;
+      },
       providesTags: ["Cart"],
     }),
     addItemToCart: builder.mutation({

@@ -1,70 +1,51 @@
-import React from 'react'
-import instaImg from "../../src/assets/instagram-1.jpg"
-import instaImg2 from "../../src/assets/instagram-2.jpg"
-import instaImg3 from "../../src/assets/instagram-3.jpg"
-import instaImg4 from "../../src/assets/instagram-4.jpg"
-import instaImg5 from "../../src/assets/instagram-5.jpg"
-import instaImg6 from "../../src/assets/instagram-6.jpg"
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-  
     <>
-<footer className='section__container footer__container'>
-    <div className='footer__col'>
-        <h4> Contact Info</h4>
-        <p>
-            <span>
-            <i className="ri-map-pin-fill"></i>  </span>
-            T3-236 , Golden-I , Techzone IV , Greater Noida West , Uttar Pradesh , 201306        
-            </p>
-            <p>
-                <span>
-                <i className="ri-mail-line"></i>  </span>
-                himtajjewellery@gmail.com
-              
-            </p>
-            <p>
-                <span>
-                <i className="ri-phone-fill"></i> </span>
-                +91 9773690444
-               
-            </p>
-          
-  
-    </div>
-    <div className='footer__col'>
-              
-    <h4>
-                Quick Links
-                </h4>
-                <a href="/">Home</a>
-                <a href="/">About US</a>
-                <a href="/">Work With Us</a>
-                <a href="/">Our Blogs</a>
-              
-            </div>
-           
-            <div className='footer__col'>
-                <h4>
-                 INSTAGRAM
-                </h4>
-                <div className='instagram__grid'>
-                    <img src={instaImg } alt=""/>
-                    <img src={instaImg2 } alt=""/>
-                    <img src={instaImg3 } alt=""/>
-               
+      <footer className="section__container footer__container bg-[#f2e5e9] p-4 lg:p-10">
+        {/* Logo Section */}
+        <div className="footer__col flex justify-center lg:justify-start">
+          <img src="/logo4.png" className="w-32 h-32 lg:w-44 lg:h-48 lg:ml-10 lg:mt-3" alt="Logo" />
+        </div>
 
-                </div>
-               
+        {/* Useful Links */}
+        <div className="footer__col text-center lg:text-left mt-4 lg:mt-0">
+          <h4 className="text-lg font-semibold mb-2">Useful Links</h4>
+          <Link to="/delivery-information" className="block text-sm">Delivery Information</Link>
+          <Link to="/return-exchange" className="block text-sm">Returns</Link>
+          <Link to="/delivery-information" className="block text-sm">Shipping</Link>
+          <Link to="/legal-policy" className="block text-sm">Legal Policy</Link>
+          <Link to="/" className="block text-sm">Terms & Conditions</Link>
+        </div>
 
-            </div>
+        {/* Information */}
+        <div className="footer__col text-center lg:text-left mt-4 lg:mt-0">
+          <h4 className="text-lg font-semibold mb-2">Information</h4>
+          <Link to="/" className="block text-sm">About Us</Link>
+          <Link to="/" className="block text-sm">Blog</Link>
+          <Link to="/cancellation-policy" className="block text-sm">Cancellation Policy</Link>
+          <Link to="/help" className="block text-sm">Help & FAQ</Link>
+          <Link to="/legal-policy" className="block text-sm">Privacy Policy</Link>
+        </div>
 
-</footer>
+        {/* Contact Us */}
+        <div className="footer__col text-center lg:text-left mt-4 lg:mt-0">
+          <h4 className="text-lg font-semibold mb-2">Contact Us</h4>
+          <p className="text-black text-sm">+91 9773690444</p>
+          <Link to="/contact-us" className="block text-sm">Chat With Us</Link>
+          <Link to="/" className="block text-sm">WhatsApp Chat With Us</Link>
+        </div>
+      </footer>
 
-
+      {/* Bottom Footer */}
+      <footer className="section__container3 text-black text-center p-4 lg:flex lg:justify-between flex-col lg:flex-row">
+        <p className="text-sm">©2025 Copyright Himtaj Jewelry. All Rights Reserved.</p>
+        <p className="text-sm">Powered by RBSH Studio</p>
+      </footer>
     </>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

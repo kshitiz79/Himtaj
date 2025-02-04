@@ -11,13 +11,22 @@ export default {
         'custom-1200': '1200px', 
         'custom-900': '900px', 
       },
+      animation: {
+        'fade-in-out': 'fadeInOut 3s ease-in-out infinite',
+      },
+      keyframes: {
+        fadeInOut: {
+          '70%, 100%': { opacity: 0.3 },
+          '80%': { opacity: 1 },
+        },
+      },
       colors: {
-        'primary': '#78a8a6', // Gold
-'primary-dark': '#4d6c6a', // Dark Goldenrod
-'primary-light': '#9bccca', // Light Golden
-'text-dark': '#0f172a', // Dark text color remains the same
-'text-light': '#64748b', // Light text color remains the same
-'extra-light': '#faf3dd', // Very light gold tone
+        'primary': '#78a8a6', 
+'primary-dark': '#4d6c6a', 
+'primary-light': '#9bccca', 
+'text-dark': '#0f172a', 
+'text-light': '#64748b', 
+'extra-light': '#faf3dd', 
 'primary-light-light': '#B3E3DF',
       }
       

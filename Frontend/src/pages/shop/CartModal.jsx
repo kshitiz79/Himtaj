@@ -1,16 +1,26 @@
-
 import React from "react";
 import OrderSummary from "./OrderSummary";
 import {
   useRemoveItemFromCartMutation,
   useUpdateCartItemMutation,
   useFetchCartQuery,
-} from '../../redux/features/cart/cartApi';
-import { getBaseUrl } from "../../../../Frontend/src/utils/baseURL";
+} from "../../redux/features/cart/cartApi";
+import { useSelector } from "react-redux"; // Import useSelector
+import { getBaseUrl } from "./../../utils/baseURL";
 
-const CartModal = ({ isOpen, onClose, userId }) => {
-  const { data: products = [], isLoading, isError, refetch } = useFetchCartQuery(userId);
+const CartModal = ({ isOpen, onClose }) => {
+  // Fetch user ID from Redux store or localStorage
+  const userId = useSelector((state) => state.auth?.user?._id) || localStorage.getItem("userId");
 
+  console.log("CartModal received userId:", userId); // Debugging log
+
+  // If userId is missing, prevent the API call
+  if (!userId) {
+    return <p className="text-red-500">Error: User not logged in or missing userId.</p>;
+  }
+
+  // Fetch cart data using Redux RTK Query
+  const { data: products = [], isLoading, isError } = useFetchCartQuery(userId);
   const [removeItemFromCart] = useRemoveItemFromCartMutation();
   const [updateCartItem] = useUpdateCartItemMutation();
 
@@ -23,7 +33,7 @@ const CartModal = ({ isOpen, onClose, userId }) => {
     await removeItemFromCart(id);
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p>Loading cart...</p>;
   if (isError) return <p>Error loading cart.</p>;
 
   return (
@@ -45,7 +55,7 @@ const CartModal = ({ isOpen, onClose, userId }) => {
           <div className="flex justify-between items-center mb-4">
             <h4 className="text-xl font-semibold">Your Cart</h4>
             <button onClick={onClose} className="text-gray-600 hover:text-gray-900">
-              <i className="ri-xrp-fill bg-black p-1 text-white"></i>
+              <i className="ri-close-fill bg-black p-1 text-white"></i>
             </button>
           </div>
           {products.length === 0 ? (
@@ -60,7 +70,7 @@ const CartModal = ({ isOpen, onClose, userId }) => {
                         ? item.image.startsWith("http")
                           ? item.image
                           : `${getBaseUrl()}${item.image}`
-                        : "/path/to/placeholder.jpg" // Fallback to placeholder image
+                        : "/path/to/placeholder.jpg"
                     }
                     alt={item.name || "Product image"}
                     className="size-12 object-cover mr-4"

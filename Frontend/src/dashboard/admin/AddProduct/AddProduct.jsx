@@ -5,6 +5,7 @@ import TextInput from './TextInput';
 import SelectInput from './SelectInput';
 import UploadImage from './UploadImage';
 import { useNavigate } from 'react-router-dom';
+import Select from "react-select";
 
 const categories = [
     { label: 'Select Category', value: '' },
@@ -19,15 +20,18 @@ const categories = [
     { label: 'Kid\'s Jewellery', value: 'Kid\'s Jewellery' },
     { label: 'Bridal Jewellery', value: 'Bridal Jewellery' },
     { label: 'Fashion Jewellery', value: 'Fashion Jewellery' },
-    { label: 'Gold Jewellery', value: 'Gold Jewellery' }
+    { label: 'Gold Jewellery', value: 'Gold Jewellery' },
+    { label: 'Chain', value: 'Chain' }
 ];
 
-const colors = [
-    { label: 'Select Color', value: '' },
-    { label: 'Silver', value: 'Silver' },
-    { label: 'Rose Gold', value: 'Rose Gold' },
-    { label: 'Gold', value: 'Gold' }
-];
+const colorOptions = [
+    { label: "Silver", value: "Silver", code: "#C4C4C4" },
+    { label: "Rose Gold", value: "Rose Gold", code: "#DEA193" },
+    { label: "Gold", value: "Gold", code: "#EOEAA3E" },
+    { label: "Platinum", value: "Platinum", code: "#E5E4E2" },
+  ];
+  
+
 const metals= [
     { label: 'Select Metal', value: '' },
     { label: '18K Gold', value: '18K Gold' },
@@ -39,22 +43,27 @@ const metals= [
 
 ];
 
-const sizes = Array.from({ length: 21 }, (_, i) => i + 5).map(size => ({
-    label: size.toString(),
-    value: size.toString()
-}));
+
+
+const genders = [
+    { label: 'Select Gender', value: '' },
+    { label: 'Male', value: 'male' },
+    { label: 'Female', value: 'female' },
+];
+
 
 const AddProduct = () => {
     const { user } = useSelector((state) => state.auth);
     const [product, setProduct] = useState({
         name: '',
         category: '',
-        color: '',
+        colors: [],
         price: '',
         oldPrice: '',
         description: '',
         isTrending: false,
         size: '',
+        gender: '',
         metal: '' 
     });
     const [mainImage, setMainImage] = useState('');
@@ -62,6 +71,18 @@ const AddProduct = () => {
 
     const [addProduct, { isLoading, error }] = useAddProductMutation();
     const navigate = useNavigate();
+
+ 
+    const handleColorsChange = (selectedOptions) => {
+        setProduct({
+          ...product,
+          colors: selectedOptions.map((option) => ({
+            value: option.value,
+            code: option.code,
+          })),
+        });
+      };
+      
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -73,31 +94,27 @@ const AddProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
-        // Check for required fields
-        if (!product.name || !product.category || !product.price || !product.color || !product.description || !mainImage) {
-            alert('Please fill in all required fields, including the main image.');
-            return;
-        }
-    
+      
+        const newProduct = {
+          ...product,
+          image: mainImage,
+          additionalImages,
+          author: user?._id, // Ensure author is included
+        };
+      
+        console.log("Submitting Product Data:", newProduct); // Debug payload
+      
         try {
-            // Ensure mainImage and additionalImages are being sent to the backend
-            await addProduct({
-                ...product,
-                image: mainImage, // Set the main image field
-                additionalImages, // Include additional images array
-                author: user?._id
-            }).unwrap();
-            
-            alert('Product added successfully!');
-            setProduct({ name: '', category: '', color: '', price: '', description: '', isTrending: false, size: '' });
-            setMainImage('');
-            setAdditionalImages([]);
-            navigate("/shop");
+          const response = await addProduct(newProduct).unwrap();
+          alert("Product added successfully!");
+          navigate("/shop");
         } catch (err) {
-            console.error('Failed to add product:', err);
+          console.error("Failed to add product:", err); // Log error details
         }
-    };
+      };
+      
+      
+    
     
 
     return (
@@ -118,13 +135,23 @@ const AddProduct = () => {
                     onChange={handleChange}
                     options={categories}
                 />
-                <SelectInput
-                    label="Color"
-                    name="color"
-                    value={product.color}
-                    onChange={handleChange}
-                    options={colors}
-                />
+    <div>
+  <label htmlFor="colors" className="block text-sm font-medium text-gray-700">
+    Colors
+  </label>
+  <Select
+    isMulti
+    options={colorOptions}
+    value={product.colors.map((color) =>
+      colorOptions.find((option) => option.value === color.value)
+    )}
+    onChange={handleColorsChange}
+    className="basic-multi-select"
+    classNamePrefix="select"
+  />
+</div>
+
+
 
 <SelectInput
                     label="Metal"  // Update label for clarity
@@ -134,13 +161,27 @@ const AddProduct = () => {
                     options={metals}  // Ensure metals options are passed
                 />
 
-                <SelectInput
-                    label="Size"
-                    name="size"
-                    value={product.size}
-                    onChange={handleChange}
-                    options={[{ label: 'Select Size', value: '' }, ...sizes]}
-                />
+<SelectInput
+    label="Gender"
+    name="gender"
+    value={product.gender}
+    onChange={handleChange}
+    options={genders}
+/>
+
+
+
+<label htmlFor="size">Size </label>
+        <input
+          type="text"
+          id="size"
+          name="size"
+          value={product.size}
+          onChange={handleChange}
+          placeholder="E.g., 'Small, Medium, Large' or 'Custom Size Description'"
+          className="add-product-InputCSS"
+        />
+
                 <TextInput
                     label="Price"
                     name="price"
